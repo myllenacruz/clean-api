@@ -66,6 +66,26 @@ describe("CreateAccountData", () => {
 		expect(encryptSpy).toHaveBeenCalledWith("1234");
 	});
 
+	test("Should throw if Encrypter throws", async () => {
+		const { systemUnderTest, encrypter } = makeSystemUnderTest();
+
+		jest.spyOn(encrypter, "encrypt").mockReturnValueOnce(
+			new Promise((resolve, reject) => {
+			    reject(new Error());
+			})
+		);
+
+		const accountData = {
+			username: "janedoe",
+			email: "valid",
+			password: "1234"
+		};
+
+		const promise = systemUnderTest.handle(accountData);
+
+		await expect(promise).rejects.toThrow();
+	});
+
 	test("Should call CreateAccountRepository with correct values", async () => {
 		const { systemUnderTest, createAccountRepository } = makeSystemUnderTest();
 
