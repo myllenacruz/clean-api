@@ -65,4 +65,24 @@ describe("CreateAccountData", () => {
 
 		expect(encryptSpy).toHaveBeenCalledWith("1234");
 	});
+
+	test("Should call CreateAccountRepository with correct values", async () => {
+		const { systemUnderTest, createAccountRepository } = makeSystemUnderTest();
+
+		const handleSype = jest.spyOn(createAccountRepository, "handle");
+
+		const accountData = {
+			username: "janedoe",
+			email: "valid@email.com",
+			password: "1234"
+		};
+
+		await systemUnderTest.handle(accountData);
+
+		expect(handleSype).toHaveBeenCalledWith({
+			username: "janedoe",
+			email: "valid@email.com",
+			password: "hashedValue"
+		});
+	});
 });
