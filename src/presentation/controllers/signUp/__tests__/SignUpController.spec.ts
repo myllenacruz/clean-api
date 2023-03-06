@@ -23,9 +23,9 @@ function makeEmailValidator() {
 	return new EmailValidator();
 }
 
-function makeCreateAccount(): ICreateAccount {
+async function makeCreateAccount(): Promise<ICreateAccount> {
 	class CreateAccount implements ICreateAccount {
-		handle(account: ICreateAccountModel): IAccountModel {
+		async handle(account: ICreateAccountModel): Promise<IAccountModel> {
 			const fakeAccount = {
 				id: "validId",
 				username: "janeDoe",
@@ -33,16 +33,16 @@ function makeCreateAccount(): ICreateAccount {
 				password: "1234"
 			};
 
-			return fakeAccount;
+			return new Promise(resolve => resolve(fakeAccount));
 		}
 	}
 
 	return new CreateAccount();
 }
 
-function makeSystemUnderTest(): ISystemUnderTest {
+async function makeSystemUnderTest(): Promise<ISystemUnderTest> {
 	const emailValidator = makeEmailValidator();
-	const createAccount = makeCreateAccount();
+	const createAccount = await makeCreateAccount();
 	const systemUnderTest = new SignUpController(emailValidator, createAccount);
 
 	return {
@@ -53,8 +53,8 @@ function makeSystemUnderTest(): ISystemUnderTest {
 }
 
 describe("SignUp Controller", () => {
-	test("Should return 400 if no username is provided", () => {
-		const { systemUnderTest } = makeSystemUnderTest();
+	test("Should return 400 if no username is provided", async () => {
+		const { systemUnderTest } = await makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -64,14 +64,14 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new MissingParamError("username"));
 	});
 
-	test("Should return 400 if no email is provided", () => {
-		const { systemUnderTest } = makeSystemUnderTest();
+	test("Should return 400 if no email is provided", async () => {
+		const { systemUnderTest } = await makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -81,14 +81,14 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new MissingParamError("email"));
 	});
 
-	test("Should return 400 if no password is provided", () => {
-		const { systemUnderTest } = makeSystemUnderTest();
+	test("Should return 400 if no password is provided", async () => {
+		const { systemUnderTest } = await makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -98,14 +98,14 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new MissingParamError("password"));
 	});
 
-	test("Should return 400 if no password confirmation is provided", () => {
-		const { systemUnderTest } = makeSystemUnderTest();
+	test("Should return 400 if no password confirmation is provided", async () => {
+		const { systemUnderTest } = await makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -115,14 +115,14 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new MissingParamError("passwordConfirmation"));
 	});
 
-	test("Should return 400 if password confirmation fails", () => {
-		const { systemUnderTest } = makeSystemUnderTest();
+	test("Should return 400 if password confirmation fails", async () => {
+		const { systemUnderTest } = await makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -133,14 +133,14 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new InvalidParamError("passwordConfirmation"));
 	});
 
-	test("Should return 400 if an invalid email is provided", () => {
-		const { systemUnderTest, emailValidator } = makeSystemUnderTest();
+	test("Should return 400 if an invalid email is provided", async () => {
+		const { systemUnderTest, emailValidator } = await makeSystemUnderTest();
 
 		jest.spyOn(emailValidator, "isValid").mockReturnValueOnce(false);
 
@@ -153,14 +153,14 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new InvalidParamError("email"));
 	});
 
-	test("Should call EmailValidator with correct email", () => {
-		const { systemUnderTest, emailValidator } = makeSystemUnderTest();
+	test("Should call EmailValidator with correct email", async () => {
+		const { systemUnderTest, emailValidator } = await makeSystemUnderTest();
 
 		const isEmailValid = jest.spyOn(emailValidator, "isValid");
 
@@ -173,12 +173,12 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		systemUnderTest.handle(httpRequest);
+		await systemUnderTest.handle(httpRequest);
 		expect(isEmailValid).toHaveBeenCalledWith("invalid@email.com");
 	});
 
-	test("Should return 500 if EmailValidator throws", () => {
-		const { systemUnderTest, emailValidator } = makeSystemUnderTest();
+	test("Should return 500 if EmailValidator throws", async () => {
+		const { systemUnderTest, emailValidator } = await makeSystemUnderTest();
 
 		jest.spyOn(emailValidator, "isValid").mockImplementationOnce(() => {
 			throw new Error();
@@ -193,14 +193,14 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());
 	});
 
-	test("Should call CreateAccount with correct values", () => {
-		const { systemUnderTest, createAccount } = makeSystemUnderTest();
+	test("Should call CreateAccount with correct values", async () => {
+		const { systemUnderTest, createAccount } = await makeSystemUnderTest();
 
 		const createAccountSpy = jest.spyOn(createAccount, "handle");
 
@@ -213,7 +213,7 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		systemUnderTest.handle(httpRequest);
+		await systemUnderTest.handle(httpRequest);
 
 		expect(createAccountSpy).toHaveBeenCalledWith({
 			email: "invalid@email.com",
@@ -222,8 +222,8 @@ describe("SignUp Controller", () => {
 		});
 	});
 
-	test("Should return 500 if CreateAccount throws", () => {
-		const { systemUnderTest, createAccount } = makeSystemUnderTest();
+	test("Should return 500 if CreateAccount throws", async () => {
+		const { systemUnderTest, createAccount } = await makeSystemUnderTest();
 
 		jest.spyOn(createAccount, "handle").mockImplementationOnce(() => {
 			throw new Error();
@@ -238,25 +238,25 @@ describe("SignUp Controller", () => {
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());
 	});
 
-	test("Should return 200 if valid datas is provided", () => {
-		const { systemUnderTest } = makeSystemUnderTest();
+	test("Should return 200 if valid datas is provided", async () => {
+		const { systemUnderTest } = await makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
-				username: "any",
-				email: "any@email.com",
+				username: "janeDoe",
+				email: "janedoe@email.com",
 				password: "1234",
 				passwordConfirmation: "1234"
 			}
 		};
 
-		const httpResponse = systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(200);
 		expect(httpResponse.body).toEqual({

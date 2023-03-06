@@ -19,7 +19,7 @@ export class SignUpController implements IController {
 		this.createAccount = createAccount;
 	}
 
-	public handle(httpRequest: IHttpRequest): IHttpResponse {
+	public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
 		try {
 			const requiredFields = [
 				"username",
@@ -46,7 +46,7 @@ export class SignUpController implements IController {
 			if (password !== passwordConfirmation)
 				return HttResponse.badRequest(new InvalidParamError("passwordConfirmation"));
 
-			const account = this.createAccount.handle({
+			const account = await this.createAccount.handle({
 				username,
 				email,
 				password
