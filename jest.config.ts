@@ -6,7 +6,8 @@ export default {
 	coverageProvider: "v8",
 	moduleNameMapper: pathsToModuleNameMapper(
 		{
-			"@presentation/*": ["presentation/*"]
+			"@presentation/*": ["presentation/*"],
+			"@utils/*": ["utils/*"]
 		},
 		{ prefix: "<rootDir>/src/" }
 	),
