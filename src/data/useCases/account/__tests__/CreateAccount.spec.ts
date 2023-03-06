@@ -105,4 +105,23 @@ describe("CreateAccountData", () => {
 			password: "hashedValue"
 		});
 	});
+
+	test("Should return an account on success", async () => {
+		const { systemUnderTest } = makeSystemUnderTest();
+
+		const accountData = {
+			username: "janedoe",
+			email: "janedoe@email.com",
+			password: "1234"
+		};
+
+		const account = await systemUnderTest.handle(accountData);
+
+		expect(account).toEqual({
+			id: "validId",
+			username: "janedoe",
+			email: "janedoe@email.com",
+			password: "hashedValue"
+		});
+	});
 });
