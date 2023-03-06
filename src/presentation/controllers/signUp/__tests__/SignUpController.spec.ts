@@ -221,4 +221,26 @@ describe("SignUp Controller", () => {
 			username: "janedoe"
 		});
 	});
+
+	test("Should return 500 if CreateAccount throws", () => {
+		const { systemUnderTest, createAccount } = makeSystemUnderTest();
+
+		jest.spyOn(createAccount, "handle").mockImplementationOnce(() => {
+			throw new Error();
+		});
+
+		const httpRequest = {
+			body: {
+				email: "invalid@email.com",
+				password: "1234",
+				passwordConfirmation: "1234",
+				username: "janedoe"
+			}
+		};
+
+		const httpResponse = systemUnderTest.handle(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(500);
+		expect(httpResponse.body).toEqual(new ServerError());
+	});
 });
