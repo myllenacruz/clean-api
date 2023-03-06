@@ -1,9 +1,13 @@
 import { SignUpController } from "@presentation/controllers/signUp/SignUpController";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 
+function makeSystemUnderTest(): SignUpController {
+	return new SignUpController();
+}
+
 describe("SignUp Controller", () => {
 	test("Should return 400 if no username is provided", () => {
-		const systemUnderTest = new SignUpController();
+		const systemUnderTest = makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -20,7 +24,7 @@ describe("SignUp Controller", () => {
 	});
 
 	test("Should return 400 if no email is provided", () => {
-		const systemUnderTest = new SignUpController();
+		const systemUnderTest = makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
