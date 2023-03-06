@@ -15,4 +15,11 @@ describe("EmailValidatorAdapter", () => {
 
 		expect(isValid).toBe(false);
 	});
+
+	test("Should return true if validator returns true", () => {
+		const sut = makeSut();
+		const isValid = sut.isValid("valid@email.com");
+
+		expect(isValid).toBe(true);
+	});
 });
