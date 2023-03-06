@@ -14,23 +14,27 @@ export class SignUpController implements IController {
 	}
 
 	public handle(httpRequest: IHttpRequest): IHttpResponse {
-		const requiredFields = [
-			"username",
-			"email",
-			"password",
-			"passwordConfirmation"
-		];
+		try {
+			const requiredFields = [
+				"username",
+				"email",
+				"password",
+				"passwordConfirmation"
+			];
 
-		for (const field of requiredFields) {
-			if (!httpRequest.body[field])
-				return HttResponse.badRequest(new MissingParamError(field));
+			for (const field of requiredFields) {
+				if (!httpRequest.body[field])
+					return HttResponse.badRequest(new MissingParamError(field));
+			}
+
+			if (!this.emailValidator.isValid(httpRequest.body.email))
+				return HttResponse.badRequest(new InvalidParamError("email"));
+
+			return {
+				statusCode: 200
+			};
+		} catch (error) {
+			return HttResponse.serverError();
 		}
-
-		if (!this.emailValidator.isValid(httpRequest.body.email))
-			return HttResponse.badRequest(new InvalidParamError("email"));
-
-		return {
-			statusCode: 200
-		};
 	}
 }

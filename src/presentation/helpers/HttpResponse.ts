@@ -8,4 +8,11 @@ export class HttResponse {
 			body: error
 		};
 	}
+
+	static serverError(): IHttpResponse {
+		return {
+			statusCode: 500,
+			body: new ServerError()
+		};
+	}
 }

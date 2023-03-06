@@ -1,6 +1,7 @@
 import { SignUpController } from "@presentation/controllers/signUp/SignUpController";
 import { InvalidParamError } from "@presentation/errors/InvalidParamError";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
+import { ServerError } from "@presentation/errors/ServerError";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 
 interface ISystemUnderTest {
@@ -134,4 +135,27 @@ describe("SignUp Controller", () => {
 		systemUnderTest.handle(httpRequest);
 		expect(isEmailValid).toHaveBeenCalledWith("invalid@email.com");
 	});
+
+	test("Should return 500 if EmailValidator throws", () => {
+		const { systemUnderTest, emailValidator } = makeSystemUnderTest();
+
+		jest.spyOn(emailValidator, "isValid").mockImplementationOnce(() => {
+			throw new Error();
+		});
+
+		const httpRequest = {
+			body: {
+				email: "invalid@email.com",
+				password: "1234",
+				passwordConfirmation: "1234",
+				username: "janedoe"
+			}
+		};
+
+		const httpResponse = systemUnderTest.handle(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(500);
+		expect(httpResponse.body).toEqual(new ServerError());
+	});
+
 });
