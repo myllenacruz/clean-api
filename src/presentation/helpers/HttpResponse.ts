@@ -15,4 +15,11 @@ export class HttResponse {
 			body: new ServerError()
 		};
 	}
+
+	static success(data: unknown): IHttpResponse {
+		return {
+			statusCode: 200,
+			body: data
+		};
+	}
 }

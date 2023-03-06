@@ -52,10 +52,7 @@ export class SignUpController implements IController {
 				password
 			});
 
-			return {
-				statusCode: 200,
-				body: account
-			};
+			return HttResponse.success(account);
 		} catch (error) {
 			return HttResponse.serverError();
 		}
