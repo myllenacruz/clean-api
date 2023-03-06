@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+	  "target": "es2016",
+	  "module": "commonjs",                                
+	  "rootDir": "./",
+	  "baseUrl": "./src",
+		"paths": {
+		"@presentation/*": ["presentation/*"]
+	  },                   
+	  "esModuleInterop": true,                             
+	  "forceConsistentCasingInFileNames": true,
+	  "strict": true,                
+	  "skipLibCheck": true                             
+	}
+  }
