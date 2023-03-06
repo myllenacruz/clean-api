@@ -98,6 +98,24 @@ describe("SignUp Controller", () => {
 		expect(httpResponse.body).toEqual(new MissingParamError("passwordConfirmation"));
 	});
 
+	test("Should return 400 if password confirmation fails", () => {
+		const { systemUnderTest } = makeSystemUnderTest();
+
+		const httpRequest = {
+			body: {
+				email: "janedoe@email.com",
+				password: "1234",
+				passwordConfirmation: "invalid",
+				username: "janedoe"
+			}
+		};
+
+		const httpResponse = systemUnderTest.handle(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(400);
+		expect(httpResponse.body).toEqual(new InvalidParamError("passwordConfirmation"));
+	});
+
 	test("Should return 400 if an invalid email is provided", () => {
 		const { systemUnderTest, emailValidator } = makeSystemUnderTest();
 
@@ -157,5 +175,4 @@ describe("SignUp Controller", () => {
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());
 	});
-
 });

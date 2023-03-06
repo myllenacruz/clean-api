@@ -22,13 +22,22 @@ export class SignUpController implements IController {
 				"passwordConfirmation"
 			];
 
+			const {
+				email,
+				password,
+				passwordConfirmation
+			} = httpRequest.body;
+
 			for (const field of requiredFields) {
 				if (!httpRequest.body[field])
 					return HttResponse.badRequest(new MissingParamError(field));
 			}
 
-			if (!this.emailValidator.isValid(httpRequest.body.email))
+			if (!this.emailValidator.isValid(email))
 				return HttResponse.badRequest(new InvalidParamError("email"));
+
+			if (password !== passwordConfirmation)
+				return HttResponse.badRequest(new InvalidParamError("passwordConfirmation"));
 
 			return {
 				statusCode: 200
