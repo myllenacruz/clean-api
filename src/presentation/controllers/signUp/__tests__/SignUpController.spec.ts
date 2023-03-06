@@ -1,13 +1,36 @@
 import { SignUpController } from "@presentation/controllers/signUp/SignUpController";
+import { InvalidParamError } from "@presentation/errors/InvalidParamError";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
+import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 
-function makeSystemUnderTest(): SignUpController {
-	return new SignUpController();
+interface ISystemUnderTest {
+	systemUnderTest: SignUpController;
+	emailValidator: IEmailValidator;
+}
+
+function makeEmailValidator() {
+	class EmailValidator implements IEmailValidator {
+		isValid(email: string): boolean {
+			return true;
+		}
+	}
+
+	return new EmailValidator();
+}
+
+function makeSystemUnderTest(): ISystemUnderTest {
+	const emailValidator = makeEmailValidator();
+	const systemUnderTest = new SignUpController(emailValidator);
+
+	return {
+		systemUnderTest,
+		emailValidator
+	};
 }
 
 describe("SignUp Controller", () => {
 	test("Should return 400 if no username is provided", () => {
-		const systemUnderTest = makeSystemUnderTest();
+		const { systemUnderTest } = makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -24,7 +47,7 @@ describe("SignUp Controller", () => {
 	});
 
 	test("Should return 400 if no email is provided", () => {
-		const systemUnderTest = makeSystemUnderTest();
+		const { systemUnderTest } = makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -41,7 +64,7 @@ describe("SignUp Controller", () => {
 	});
 
 	test("Should return 400 if no password is provided", () => {
-		const systemUnderTest = makeSystemUnderTest();
+		const { systemUnderTest } = makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -58,7 +81,7 @@ describe("SignUp Controller", () => {
 	});
 
 	test("Should return 400 if no password confirmation is provided", () => {
-		const systemUnderTest = makeSystemUnderTest();
+		const { systemUnderTest } = makeSystemUnderTest();
 
 		const httpRequest = {
 			body: {
@@ -72,5 +95,25 @@ describe("SignUp Controller", () => {
 
 		expect(httpResponse.statusCode).toBe(400);
 		expect(httpResponse.body).toEqual(new MissingParamError("passwordConfirmation"));
+	});
+
+	test("Should return 400 if an invalid email is provided", () => {
+		const { systemUnderTest, emailValidator } = makeSystemUnderTest();
+
+		jest.spyOn(emailValidator, "isValid").mockReturnValueOnce(false);
+
+		const httpRequest = {
+			body: {
+				username: "any",
+				email: "any@email.com",
+				password: "1234",
+				passwordConfirmation: "1234"
+			}
+		};
+
+		const httpResponse = systemUnderTest.handle(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(400);
+		expect(httpResponse.body).toEqual(new InvalidParamError("email"));
 	});
 });
