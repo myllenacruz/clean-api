@@ -7,7 +7,8 @@ export default {
 	moduleNameMapper: pathsToModuleNameMapper(
 		{
 			"@presentation/*": ["presentation/*"],
-			"@utils/*": ["utils/*"]
+			"@utils/*": ["utils/*"],
+			"@data/*": ["data/*"]
 		},
 		{ prefix: "<rootDir>/src/" }
 	),
@@ -18,7 +19,8 @@ export default {
 		"<rootDir>/src/presentation/errors/*",
 		"<rootDir>/src/presentation/helpers/*",
 		"<rootDir>/src/domain/models/account/interfaces",
-		"<rootDir>/src/domain/useCases/account/interfaces"
+		"<rootDir>/src/domain/useCases/account/interfaces",
+		"<rootDir>/src/data/protocols/*"
 	],
 	preset: "ts-jest",
 	testEnvironment: "node",
