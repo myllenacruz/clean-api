@@ -243,4 +243,27 @@ describe("SignUp Controller", () => {
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());
 	});
+
+	test("Should return 200 if valid datas is provided", () => {
+		const { systemUnderTest } = makeSystemUnderTest();
+
+		const httpRequest = {
+			body: {
+				username: "any",
+				email: "any@email.com",
+				password: "1234",
+				passwordConfirmation: "1234"
+			}
+		};
+
+		const httpResponse = systemUnderTest.handle(httpRequest);
+
+		expect(httpResponse.statusCode).toBe(200);
+		expect(httpResponse.body).toEqual({
+			id: "validId",
+			username: "janeDoe",
+			email: "janedoe@email.com",
+			password: "1234"
+		});
+	});
 });

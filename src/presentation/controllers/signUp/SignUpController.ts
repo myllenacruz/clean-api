@@ -46,14 +46,15 @@ export class SignUpController implements IController {
 			if (password !== passwordConfirmation)
 				return HttResponse.badRequest(new InvalidParamError("passwordConfirmation"));
 
-			this.createAccount.handle({
+			const account = this.createAccount.handle({
 				username,
 				email,
 				password
 			});
 
 			return {
-				statusCode: 200
+				statusCode: 200,
+				body: account
 			};
 		} catch (error) {
 			return HttResponse.serverError();
