@@ -8,7 +8,9 @@ export class SignUpController implements IController {
 	public handle(httpRequest: IHttpRequest): IHttpResponse {
 		const requiredFields = [
 			"username",
-			"email"
+			"email",
+			"password",
+			"passwordConfirmation"
 		];
 
 		for (const field of requiredFields) {
