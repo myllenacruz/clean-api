@@ -5,7 +5,8 @@
 	  "rootDir": "./",
 	  "baseUrl": "./src",
 		"paths": {
-		"@presentation/*": ["presentation/*"]
+		"@presentation/*": ["presentation/*"],
+		"@domain/*": ["domain/*"]
 	  },                   
 	  "esModuleInterop": true,                             
 	  "forceConsistentCasingInFileNames": true,

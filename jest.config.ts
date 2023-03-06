@@ -15,7 +15,9 @@ export default {
 		"/node_modules/",
 		"<rootDir>/src/presentation/protocols/*",
 		"<rootDir>/src/presentation/errors/*",
-		"<rootDir>/src/presentation/helpers/*"
+		"<rootDir>/src/presentation/helpers/*",
+		"<rootDir>/src/domain/models/account/interfaces",
+		"<rootDir>/src/domain/useCases/account/interfaces"
 	],
 	preset: "ts-jest",
 	testEnvironment: "node",

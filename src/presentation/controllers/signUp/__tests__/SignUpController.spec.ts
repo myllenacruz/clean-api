@@ -1,3 +1,6 @@
+import { IAccountModel } from "@domain/models/account/interfaces/IAccountModel";
+import { ICreateAccount } from "@domain/useCases/account/interfaces/ICreateAccount";
+import { ICreateAccountModel } from "@domain/useCases/account/interfaces/ICreateAccountModel";
 import { SignUpController } from "@presentation/controllers/signUp/SignUpController";
 import { InvalidParamError } from "@presentation/errors/InvalidParamError";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
@@ -5,8 +8,9 @@ import { ServerError } from "@presentation/errors/ServerError";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 
 interface ISystemUnderTest {
-	systemUnderTest: SignUpController;
 	emailValidator: IEmailValidator;
+	createAccount: ICreateAccount;
+	systemUnderTest: SignUpController;
 }
 
 function makeEmailValidator() {
@@ -19,13 +23,32 @@ function makeEmailValidator() {
 	return new EmailValidator();
 }
 
+function makeCreateAccount(): ICreateAccount {
+	class CreateAccount implements ICreateAccount {
+		handle(account: ICreateAccountModel): IAccountModel {
+			const fakeAccount = {
+				id: "validId",
+				username: "janeDoe",
+				email: "janedoe@email.com",
+				password: "1234"
+			};
+
+			return fakeAccount;
+		}
+	}
+
+	return new CreateAccount();
+}
+
 function makeSystemUnderTest(): ISystemUnderTest {
 	const emailValidator = makeEmailValidator();
-	const systemUnderTest = new SignUpController(emailValidator);
+	const createAccount = makeCreateAccount();
+	const systemUnderTest = new SignUpController(emailValidator, createAccount);
 
 	return {
 		systemUnderTest,
-		emailValidator
+		emailValidator,
+		createAccount
 	};
 }
 
@@ -174,5 +197,28 @@ describe("SignUp Controller", () => {
 
 		expect(httpResponse.statusCode).toBe(500);
 		expect(httpResponse.body).toEqual(new ServerError());
+	});
+
+	test("Should call CreateAccount with correct values", () => {
+		const { systemUnderTest, createAccount } = makeSystemUnderTest();
+
+		const createAccountSpy = jest.spyOn(createAccount, "handle");
+
+		const httpRequest = {
+			body: {
+				email: "invalid@email.com",
+				password: "1234",
+				passwordConfirmation: "1234",
+				username: "janedoe"
+			}
+		};
+
+		systemUnderTest.handle(httpRequest);
+
+		expect(createAccountSpy).toHaveBeenCalledWith({
+			email: "invalid@email.com",
+			password: "1234",
+			username: "janedoe"
+		});
 	});
 });

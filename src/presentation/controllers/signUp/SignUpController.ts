@@ -5,12 +5,18 @@ import { IController } from "@presentation/protocols/controllers/IController";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
+import { ICreateAccount } from "@domain/useCases/account/interfaces/ICreateAccount";
 
 export class SignUpController implements IController {
 	private readonly emailValidator: IEmailValidator;
+	private readonly createAccount: ICreateAccount;
 
-	constructor(emailValidator: IEmailValidator) {
+	constructor(
+		emailValidator: IEmailValidator,
+		createAccount: ICreateAccount
+	) {
 		this.emailValidator = emailValidator;
+		this.createAccount = createAccount;
 	}
 
 	public handle(httpRequest: IHttpRequest): IHttpResponse {
@@ -23,6 +29,7 @@ export class SignUpController implements IController {
 			];
 
 			const {
+				username,
 				email,
 				password,
 				passwordConfirmation
@@ -38,6 +45,12 @@ export class SignUpController implements IController {
 
 			if (password !== passwordConfirmation)
 				return HttResponse.badRequest(new InvalidParamError("passwordConfirmation"));
+
+			this.createAccount.handle({
+				username,
+				email,
+				password
+			});
 
 			return {
 				statusCode: 200
