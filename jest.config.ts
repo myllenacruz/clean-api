@@ -9,7 +9,8 @@ export default {
 			"@presentation/*": ["presentation/*"],
 			"@utils/*": ["utils/*"],
 			"@data/*": ["data/*"],
-			"@infra/*": ["infra/*"]
+			"@infra/*": ["infra/*"],
+			"@main/*": ["main/*"]
 		},
 		{ prefix: "<rootDir>/src/" }
 	),
