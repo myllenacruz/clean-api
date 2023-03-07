@@ -1,4 +1,5 @@
-import { MongoClient, Collection } from "mongodb";
+import { MongoClient, Collection, WithId, Document } from "mongodb";
+import { IAccountModel } from "@domain/models/account/interfaces/IAccountModel";
 
 export class MongoHelper {
 	static client: MongoClient;
@@ -13,5 +14,17 @@ export class MongoHelper {
 
 	static getCollection(name: string): Collection {
 		return this.client.db().collection(name);
+	}
+
+	static mapper(collection: WithId<Document>): IAccountModel {
+		const {
+			_id,
+			...accountWithoutId
+		} = collection;
+
+		return Object.assign({},
+			accountWithoutId,
+			{ id: _id.toHexString() }
+		) as IAccountModel;
 	}
 }

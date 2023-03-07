@@ -13,11 +13,6 @@ export class AccountMongoDbRepository implements ICreateAccountRepository {
 			_id: newAccount.insertedId
 		});
 
-		return {
-			id: account!._id.toHexString(),
-			username: account!.username,
-			email: account!.email,
-			password: account!.password
-		};
+		return MongoHelper.mapper(account!);
 	}
 }
