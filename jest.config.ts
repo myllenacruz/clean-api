@@ -8,7 +8,8 @@ export default {
 		{
 			"@presentation/*": ["presentation/*"],
 			"@utils/*": ["utils/*"],
-			"@data/*": ["data/*"]
+			"@data/*": ["data/*"],
+			"@infra/*": ["infra/*"]
 		},
 		{ prefix: "<rootDir>/src/" }
 	),
