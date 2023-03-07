@@ -1,6 +1,6 @@
 import express from "express";
-import configMiddleware from "@main/config/middlewares";
-import configRoutes from "@main/routes";
+import configMiddleware from "../config/middlewares";
+import configRoutes from "../routes";
 
 const app = express();
 

@@ -9,8 +9,7 @@
 		"@domain/*": ["domain/*"],
 		"@utils/*": ["utils/*"],
 		"@data/*": ["data/*"],
-		"@infra/*": ["infra/*"],
-		"@main/*": ["main/*"]
+		"@infra/*": ["infra/*"]
 	  },                   
 	  "esModuleInterop": true,                             
 	  "forceConsistentCasingInFileNames": true,
