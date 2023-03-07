@@ -33,4 +33,11 @@ describe("BCryptAdapter", () => {
 
 		await expect(promise).rejects.toThrow();
 	});
+
+	test("Should return a hash on success", async () => {
+		const systemUnderTest = makeSystemUnderTest();
+		const hash = await systemUnderTest.encrypt("value");
+
+		expect(hash).toBe("hashedValue");
+	});
 });
