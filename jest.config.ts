@@ -23,7 +23,10 @@ export default {
 		"<rootDir>/src/domain/useCases/account/interfaces",
 		"<rootDir>/src/data/protocols/*"
 	],
-	preset: "ts-jest",
+	preset: "@shelf/jest-mongodb",
 	testEnvironment: "node",
-	testMatch: ["**/*.spec.ts"]
+	testMatch: ["**/*.spec.ts"],
+	transform: {
+		".+\\.ts$": "ts-jest"
+	}
 };
