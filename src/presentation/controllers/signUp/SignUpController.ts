@@ -54,7 +54,7 @@ export class SignUpController implements IController {
 
 			return HttResponse.success(account);
 		} catch (error) {
-			return HttResponse.serverError();
+			return HttResponse.serverError(error as Error);
 		}
 	}
 }

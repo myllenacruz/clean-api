@@ -9,10 +9,10 @@ export class HttResponse {
 		};
 	}
 
-	static serverError(): IHttpResponse {
+	static serverError(error: Error): IHttpResponse {
 		return {
 			statusCode: 500,
-			body: new ServerError()
+			body: new ServerError(error.stack!)
 		};
 	}
 
