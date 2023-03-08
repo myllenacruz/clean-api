@@ -3,8 +3,10 @@ import { IAccountModel } from "@domain/models/account/interfaces/IAccountModel";
 
 export class MongoHelper {
 	static client: MongoClient;
+	static uri: string;
 
 	static async connect(uri: string): Promise<void> {
+		this.uri = uri;
 		this.client = await MongoClient.connect(uri);
 	}
 
@@ -12,11 +14,15 @@ export class MongoHelper {
 		await this.client.close();
 	}
 
-	static getCollection(name: string): Collection {
+	static getCollection(
+		name: string
+	): Collection {
 		return this.client.db().collection(name);
 	}
 
-	static mapper(collection: WithId<Document>): IAccountModel {
+	static mapper(
+		collection: WithId<Document>
+	): IAccountModel {
 		const {
 			_id,
 			...accountWithoutId
