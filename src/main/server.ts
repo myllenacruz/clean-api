@@ -1,6 +1,6 @@
-import app from "./config/app";
-import { MongoHelper } from "../infra/database/mongoDb/helpers/MongoHelper";
-import env from "./config/env";
+import app from "@main/config/app";
+import { MongoHelper } from "@infra/database/mongoDb/helpers/MongoHelper";
+import env from "@main/config/env";
 
 async function connect(): Promise<void> {
 	try {
