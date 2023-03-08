@@ -1,6 +1,6 @@
-import { IAccountModel } from "@domain/models/account/interfaces/IAccountModel";
-import { ICreateAccount } from "@domain/useCases/account/interfaces/ICreateAccount";
-import { ICreateAccountModel } from "@domain/useCases/account/interfaces/ICreateAccountModel";
+import { IAccountModel } from "@domain/models/account/IAccountModel";
+import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
+import { ICreateAccountModel } from "@domain/useCases/account/ICreateAccountModel";
 import { SignUpController } from "@presentation/controllers/signUp/SignUpController";
 import { InvalidParamError } from "@presentation/errors/InvalidParamError";
 import { MissingParamError } from "@presentation/errors/MissingParamError";

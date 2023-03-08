@@ -5,7 +5,7 @@ import { IController } from "@presentation/protocols/controllers/IController";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
-import { ICreateAccount } from "@domain/useCases/account/interfaces/ICreateAccount";
+import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
 
 export class SignUpController implements IController {
 	private readonly emailValidator: IEmailValidator;

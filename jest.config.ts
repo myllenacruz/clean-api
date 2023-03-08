@@ -20,8 +20,8 @@ export default {
 		"<rootDir>/src/presentation/protocols/*",
 		"<rootDir>/src/presentation/errors/*",
 		"<rootDir>/src/presentation/helpers/*",
-		"<rootDir>/src/domain/models/account/interfaces",
-		"<rootDir>/src/domain/useCases/account/interfaces",
+		"<rootDir>/src/domain/models/account/",
+		"<rootDir>/src/domain/useCases/account/",
 		"<rootDir>/src/data/protocols/*",
 		"<rootDir>/src/main/server.ts",
 		"<rootDir>/src/main/config/env"

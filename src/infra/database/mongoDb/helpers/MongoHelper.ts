@@ -1,5 +1,5 @@
 import { MongoClient, Collection, WithId, Document } from "mongodb";
-import { IAccountModel } from "@domain/models/account/interfaces/IAccountModel";
+import { IAccountModel } from "@domain/models/account/IAccountModel";
 
 export class MongoHelper {
 	static client: MongoClient;
