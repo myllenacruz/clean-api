@@ -22,7 +22,9 @@ export default {
 		"<rootDir>/src/presentation/helpers/*",
 		"<rootDir>/src/domain/models/account/interfaces",
 		"<rootDir>/src/domain/useCases/account/interfaces",
-		"<rootDir>/src/data/protocols/*"
+		"<rootDir>/src/data/protocols/*",
+		"<rootDir>/src/main/server.ts",
+		"<rootDir>/src/main/config/env"
 	],
 	preset: "@shelf/jest-mongodb",
 	testEnvironment: "node",
