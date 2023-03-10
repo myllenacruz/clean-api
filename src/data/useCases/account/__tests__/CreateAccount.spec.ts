@@ -3,6 +3,8 @@ import { CreateAccountData } from "@data/useCases/account/CreateAccountData";
 import { ICreateAccountModel } from "@domain/useCases/account/ICreateAccountModel";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
+import { accountModel } from "@data/useCases/account/__tests__/mocks/account";
+import { accountData } from "@data/useCases/account/__tests__/mocks/accountData";
 
 interface ISystemUnderTest {
 	encrypter: IEncrypter;
@@ -23,14 +25,7 @@ function makeEncrypter(): IEncrypter {
 function makeCreateAccountRepository(): ICreateAccountRepository {
 	class CreateAccountRepository implements ICreateAccountRepository {
 		async handle(accountData: ICreateAccountModel): Promise<IAccountModel> {
-			const account = {
-				id: "validId",
-				username: "janedoe",
-				email: "janedoe@email.com",
-				password: "hashedValue"
-			};
-
-			return new Promise(resolve => resolve(account));
+			return new Promise(resolve => resolve(accountModel));
 		}
 	}
 
@@ -75,12 +70,6 @@ describe("CreateAccountData", () => {
 			})
 		);
 
-		const accountData = {
-			username: "janedoe",
-			email: "valid",
-			password: "1234"
-		};
-
 		const promise = systemUnderTest.handle(accountData);
 
 		await expect(promise).rejects.toThrow();
@@ -90,12 +79,6 @@ describe("CreateAccountData", () => {
 		const { systemUnderTest, createAccountRepository } = makeSystemUnderTest();
 
 		const handleSype = jest.spyOn(createAccountRepository, "handle");
-
-		const accountData = {
-			username: "janedoe",
-			email: "valid@email.com",
-			password: "1234"
-		};
 
 		await systemUnderTest.handle(accountData);
 
@@ -109,19 +92,8 @@ describe("CreateAccountData", () => {
 	test("Should return an account on success", async () => {
 		const { systemUnderTest } = makeSystemUnderTest();
 
-		const accountData = {
-			username: "janedoe",
-			email: "janedoe@email.com",
-			password: "1234"
-		};
-
 		const account = await systemUnderTest.handle(accountData);
 
-		expect(account).toEqual({
-			id: "validId",
-			username: "janedoe",
-			email: "janedoe@email.com",
-			password: "hashedValue"
-		});
+		expect(account).toEqual(accountModel);
 	});
 });
