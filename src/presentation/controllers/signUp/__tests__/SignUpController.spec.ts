@@ -6,6 +6,9 @@ import { InvalidParamError } from "@presentation/errors/InvalidParamError";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { ServerError } from "@presentation/errors/ServerError";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
+import { invalidRequest, validRequest } from "@presentation/controllers/signUp/__tests__/mocks/httpRequest";
+import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/account";
+import { HttResponse } from "@presentation/helpers/HttpResponse";
 
 interface ISystemUnderTest {
 	emailValidator: IEmailValidator;
@@ -26,14 +29,7 @@ function makeEmailValidator() {
 async function makeCreateAccount(): Promise<ICreateAccount> {
 	class CreateAccount implements ICreateAccount {
 		async handle(account: ICreateAccountModel): Promise<IAccountModel> {
-			const fakeAccount = {
-				id: "validId",
-				username: "janeDoe",
-				email: "janedoe@email.com",
-				password: "1234"
-			};
-
-			return new Promise(resolve => resolve(fakeAccount));
+			return new Promise(resolve => resolve(accountModel));
 		}
 	}
 
@@ -66,8 +62,9 @@ describe("SignUp Controller", () => {
 
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
-		expect(httpResponse.statusCode).toBe(400);
-		expect(httpResponse.body).toEqual(new MissingParamError("username"));
+		expect(httpResponse).toEqual(
+			HttResponse.badRequest(new MissingParamError("username"))
+		);
 	});
 
 	test("Should return 400 if no email is provided", async () => {
@@ -83,8 +80,9 @@ describe("SignUp Controller", () => {
 
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
-		expect(httpResponse.statusCode).toBe(400);
-		expect(httpResponse.body).toEqual(new MissingParamError("email"));
+		expect(httpResponse).toEqual(
+			HttResponse.badRequest(new MissingParamError("email"))
+		);
 	});
 
 	test("Should return 400 if no password is provided", async () => {
@@ -100,8 +98,9 @@ describe("SignUp Controller", () => {
 
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
-		expect(httpResponse.statusCode).toBe(400);
-		expect(httpResponse.body).toEqual(new MissingParamError("password"));
+		expect(httpResponse).toEqual(
+			HttResponse.badRequest(new MissingParamError("password"))
+		);
 	});
 
 	test("Should return 400 if no password confirmation is provided", async () => {
@@ -117,8 +116,9 @@ describe("SignUp Controller", () => {
 
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
-		expect(httpResponse.statusCode).toBe(400);
-		expect(httpResponse.body).toEqual(new MissingParamError("passwordConfirmation"));
+		expect(httpResponse).toEqual(
+			HttResponse.badRequest(new MissingParamError("passwordConfirmation"))
+		);
 	});
 
 	test("Should return 400 if password confirmation fails", async () => {
@@ -136,7 +136,10 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse.statusCode).toBe(400);
-		expect(httpResponse.body).toEqual(new InvalidParamError("passwordConfirmation"));
+
+		expect(httpResponse).toEqual(
+			HttResponse.badRequest(new InvalidParamError("passwordConfirmation"))
+		);
 	});
 
 	test("Should return 400 if an invalid email is provided", async () => {
@@ -144,19 +147,11 @@ describe("SignUp Controller", () => {
 
 		jest.spyOn(emailValidator, "isValid").mockReturnValueOnce(false);
 
-		const httpRequest = {
-			body: {
-				username: "any",
-				email: "any@email.com",
-				password: "1234",
-				passwordConfirmation: "1234"
-			}
-		};
+		const httpResponse = await systemUnderTest.handle(invalidRequest);
 
-		const httpResponse = await systemUnderTest.handle(httpRequest);
-
-		expect(httpResponse.statusCode).toBe(400);
-		expect(httpResponse.body).toEqual(new InvalidParamError("email"));
+		expect(httpResponse).toEqual(
+			HttResponse.badRequest(new InvalidParamError("email"))
+		);
 	});
 
 	test("Should call EmailValidator with correct email", async () => {
@@ -164,17 +159,8 @@ describe("SignUp Controller", () => {
 
 		const isEmailValid = jest.spyOn(emailValidator, "isValid");
 
-		const httpRequest = {
-			body: {
-				email: "invalid@email.com",
-				password: "1234",
-				passwordConfirmation: "1234",
-				username: "any"
-			}
-		};
-
-		await systemUnderTest.handle(httpRequest);
-		expect(isEmailValid).toHaveBeenCalledWith("invalid@email.com");
+		await systemUnderTest.handle(validRequest);
+		expect(isEmailValid).toHaveBeenCalledWith("janedoe@email.com");
 	});
 
 	test("Should return 500 if EmailValidator throws", async () => {
@@ -184,19 +170,11 @@ describe("SignUp Controller", () => {
 			throw new Error();
 		});
 
-		const httpRequest = {
-			body: {
-				email: "invalid@email.com",
-				password: "1234",
-				passwordConfirmation: "1234",
-				username: "janedoe"
-			}
-		};
+		const httpResponse = await systemUnderTest.handle(invalidRequest);
 
-		const httpResponse = await systemUnderTest.handle(httpRequest);
-
-		expect(httpResponse.statusCode).toBe(500);
-		expect(httpResponse.body).toEqual(new ServerError());
+		expect(httpResponse).toEqual(
+			HttResponse.serverError(new ServerError(""))
+		);
 	});
 
 	test("Should call CreateAccount with correct values", async () => {
@@ -204,21 +182,12 @@ describe("SignUp Controller", () => {
 
 		const createAccountSpy = jest.spyOn(createAccount, "handle");
 
-		const httpRequest = {
-			body: {
-				email: "invalid@email.com",
-				password: "1234",
-				passwordConfirmation: "1234",
-				username: "janedoe"
-			}
-		};
-
-		await systemUnderTest.handle(httpRequest);
+		await systemUnderTest.handle(validRequest);
 
 		expect(createAccountSpy).toHaveBeenCalledWith({
-			email: "invalid@email.com",
+			email: "janedoe@email.com",
 			password: "1234",
-			username: "janedoe"
+			username: "janeDoe"
 		});
 	});
 
@@ -229,41 +198,17 @@ describe("SignUp Controller", () => {
 			throw new Error();
 		});
 
-		const httpRequest = {
-			body: {
-				email: "invalid@email.com",
-				password: "1234",
-				passwordConfirmation: "1234",
-				username: "janedoe"
-			}
-		};
+		const httpResponse = await systemUnderTest.handle(invalidRequest);
 
-		const httpResponse = await systemUnderTest.handle(httpRequest);
-
-		expect(httpResponse.statusCode).toBe(500);
-		expect(httpResponse.body).toEqual(new ServerError());
+		expect(httpResponse).toEqual(
+			HttResponse.serverError(new ServerError(""))
+		);
 	});
 
 	test("Should return 200 if valid datas is provided", async () => {
 		const { systemUnderTest } = await makeSystemUnderTest();
+		const httpResponse = await systemUnderTest.handle(validRequest);
 
-		const httpRequest = {
-			body: {
-				username: "janeDoe",
-				email: "janedoe@email.com",
-				password: "1234",
-				passwordConfirmation: "1234"
-			}
-		};
-
-		const httpResponse = await systemUnderTest.handle(httpRequest);
-
-		expect(httpResponse.statusCode).toBe(200);
-		expect(httpResponse.body).toEqual({
-			id: "validId",
-			username: "janeDoe",
-			email: "janedoe@email.com",
-			password: "1234"
-		});
+		expect(httpResponse).toEqual(HttResponse.success(accountModel));
 	});
 });
