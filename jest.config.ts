@@ -22,6 +22,7 @@ export default {
 		"<rootDir>/src/presentation/helpers/*",
 		"<rootDir>/src/domain/models/account/",
 		"<rootDir>/src/domain/useCases/account/",
+		"<rootDir>/src/domain/useCases/authentication/",
 		"<rootDir>/src/data/protocols/*",
 		"<rootDir>/src/main/server.ts",
 		"<rootDir>/src/main/config/env"
