@@ -5,6 +5,7 @@ import { AccountMongoDbRepository } from "@infra/database/mongoDb/repositories/a
 import { CreateAccountData } from "@data/useCases/account/CreateAccountData";
 import { LogControllerDecorator } from "@main/decorators/log/LogControllerDecorator";
 import { IController } from "@presentation/protocols/controllers/IController";
+import { LogMongoDbRepository } from "@infra/database/mongoDb/repositories/log/LogMongoDbRepository";
 
 export class SignUpFactory {
 	static controller(): IController {
@@ -14,7 +15,8 @@ export class SignUpFactory {
 		const accountMongoDbRepository = new AccountMongoDbRepository();
 		const accountData = new CreateAccountData(bcryptAdapter, accountMongoDbRepository);
 		const signUpController = new SignUpController(emailValidatorAdapter, accountData);
+		const logMongoDbRepository = new LogMongoDbRepository();
 
-		return new LogControllerDecorator(signUpController);
+		return new LogControllerDecorator(signUpController, logMongoDbRepository);
 	}
 }
