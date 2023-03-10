@@ -6,6 +6,12 @@ import { MissingParamError } from "@presentation/errors/MissingParamError";
 
 export class LoginController implements IController {
 	public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-		return HttResponse.badRequest(new MissingParamError("email"));
+		if (!httpRequest.body.username)
+			return HttResponse.badRequest(new MissingParamError("username"));
+
+		if (!httpRequest.body.password)
+			return HttResponse.badRequest(new MissingParamError("password"));
+
+		return HttResponse.success(httpRequest.body);
 	}
 }
