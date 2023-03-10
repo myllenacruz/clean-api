@@ -20,7 +20,7 @@ function makeSystemUnderTest(): ISystemUnderTest {
 
 function makeAuthentication(): IAuthentication {
 	class Authentication implements IAuthentication {
-		async auth(username: string, password: string): Promise<string> {
+		async auth(username: string, password: string): Promise<string | null> {
 			return "anyToken";
 		}
 	}
@@ -72,5 +72,24 @@ describe("LoginController", () => {
 		await systemUnderTest.handle(httpRequest);
 
 		expect(authSpy).toHaveBeenCalledWith("janedoe", "1234");
+	});
+
+	test("Should return 401 an invalid credentials are provided", async () => {
+		const { systemUnderTest, authentication } = makeSystemUnderTest();
+
+		jest.spyOn(authentication, "auth").mockReturnValueOnce(
+			new Promise(resolve => resolve(null))
+		);
+
+		const httpRequest = {
+			body: {
+				username: "janedoe",
+				password: "1234"
+			}
+		};
+
+		const httpResponse = await systemUnderTest.handle(httpRequest);
+
+		expect(httpResponse).toEqual(HttpResponse.unauthorized());
 	});
 });

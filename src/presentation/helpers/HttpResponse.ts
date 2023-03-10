@@ -1,5 +1,6 @@
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 import { ServerError } from "@presentation/errors/ServerError";
+import { UnauthorizedError } from "@presentation/errors/UnauthorizedError";
 
 export class HttpResponse {
 	static badRequest(error: Error): IHttpResponse {
@@ -13,6 +14,13 @@ export class HttpResponse {
 		return {
 			statusCode: 500,
 			body: new ServerError(error.stack!)
+		};
+	}
+
+	static unauthorized(): IHttpResponse {
+		return {
+			statusCode: 401,
+			body: new UnauthorizedError()
 		};
 	}
 

@@ -4,6 +4,7 @@ import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 import { HttpResponse } from "@presentation/helpers/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
+import { UnauthorizedError } from "@presentation/errors/UnauthorizedError";
 
 export class LoginController implements IController {
 	private readonly authentication: IAuthentication;
@@ -29,7 +30,9 @@ export class LoginController implements IController {
 					return HttpResponse.badRequest(new MissingParamError(field));
 			}
 
-			await this.authentication.auth(username, password);
+			const accesToken = await this.authentication.auth(username, password);
+
+			if (!accesToken) return HttpResponse.unauthorized();
 
 			return HttpResponse.success(httpRequest.body);
 		} catch (error) {
