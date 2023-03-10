@@ -2,7 +2,7 @@ import { LogControllerDecorator } from "@main/decorators/log/LogControllerDecora
 import { IController } from "@presentation/protocols/controllers/IController";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
-import { HttResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/HttpResponse";
 import { ILogErrorRepository } from "@data/protocols/log/ILogErrorRepository";
 import { validRequest } from "@main/decorators/log/__tests__/mocks/httpRequest";
 import { accountModel } from "@main/decorators/log/__tests__/mocks/account";
@@ -18,7 +18,7 @@ function makeController(): IController {
 	class Controller implements IController {
 		async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
 			return new Promise(resolve => resolve(
-				HttResponse.success(accountModel))
+				HttpResponse.success(accountModel))
 			);
 		}
 	}
@@ -64,7 +64,7 @@ describe("LogControllerDecorator", () => {
 
 		const httpResponse = await systemUnderTest.handle(validRequest);
 
-		expect(httpResponse).toEqual(HttResponse.success(accountModel));
+		expect(httpResponse).toEqual(HttpResponse.success(accountModel));
 	});
 
 	test("Should call LogErrorRepository with correct error if controller returns a server error", async () => {

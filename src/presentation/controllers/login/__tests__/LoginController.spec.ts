@@ -1,5 +1,5 @@
 import { LoginController } from "@presentation/controllers/login/LoginController";
-import { HttResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
 
@@ -40,7 +40,7 @@ describe("LoginController", () => {
 
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
-		expect(httpResponse).toEqual(HttResponse.badRequest(new MissingParamError("username")));
+		expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError("username")));
 	});
 
 	test("Should return 400 if no password is provided", async () => {
@@ -54,7 +54,7 @@ describe("LoginController", () => {
 
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
-		expect(httpResponse).toEqual(HttResponse.badRequest(new MissingParamError("password")));
+		expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError("password")));
 	});
 
 	test("Should call Authentication with correct values", async () => {

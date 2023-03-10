@@ -8,7 +8,7 @@ import { ServerError } from "@presentation/errors/ServerError";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { invalidRequest, validRequest } from "@presentation/controllers/signUp/__tests__/mocks/httpRequest";
 import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/account";
-import { HttResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/HttpResponse";
 
 interface ISystemUnderTest {
 	emailValidator: IEmailValidator;
@@ -63,7 +63,7 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse).toEqual(
-			HttResponse.badRequest(new MissingParamError("username"))
+			HttpResponse.badRequest(new MissingParamError("username"))
 		);
 	});
 
@@ -81,7 +81,7 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse).toEqual(
-			HttResponse.badRequest(new MissingParamError("email"))
+			HttpResponse.badRequest(new MissingParamError("email"))
 		);
 	});
 
@@ -99,7 +99,7 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse).toEqual(
-			HttResponse.badRequest(new MissingParamError("password"))
+			HttpResponse.badRequest(new MissingParamError("password"))
 		);
 	});
 
@@ -117,7 +117,7 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(httpRequest);
 
 		expect(httpResponse).toEqual(
-			HttResponse.badRequest(new MissingParamError("passwordConfirmation"))
+			HttpResponse.badRequest(new MissingParamError("passwordConfirmation"))
 		);
 	});
 
@@ -138,7 +138,7 @@ describe("SignUp Controller", () => {
 		expect(httpResponse.statusCode).toBe(400);
 
 		expect(httpResponse).toEqual(
-			HttResponse.badRequest(new InvalidParamError("passwordConfirmation"))
+			HttpResponse.badRequest(new InvalidParamError("passwordConfirmation"))
 		);
 	});
 
@@ -150,7 +150,7 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(invalidRequest);
 
 		expect(httpResponse).toEqual(
-			HttResponse.badRequest(new InvalidParamError("email"))
+			HttpResponse.badRequest(new InvalidParamError("email"))
 		);
 	});
 
@@ -173,7 +173,7 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(invalidRequest);
 
 		expect(httpResponse).toEqual(
-			HttResponse.serverError(new ServerError(""))
+			HttpResponse.serverError(new ServerError(""))
 		);
 	});
 
@@ -201,7 +201,7 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(invalidRequest);
 
 		expect(httpResponse).toEqual(
-			HttResponse.serverError(new ServerError(""))
+			HttpResponse.serverError(new ServerError(""))
 		);
 	});
 
@@ -209,6 +209,6 @@ describe("SignUp Controller", () => {
 		const { systemUnderTest } = await makeSystemUnderTest();
 		const httpResponse = await systemUnderTest.handle(validRequest);
 
-		expect(httpResponse).toEqual(HttResponse.success(accountModel));
+		expect(httpResponse).toEqual(HttpResponse.success(accountModel));
 	});
 });

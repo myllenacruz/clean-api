@@ -1,4 +1,4 @@
-import { HttResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/HttpResponse";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 
 export function serverError(): IHttpResponse {
@@ -6,5 +6,5 @@ export function serverError(): IHttpResponse {
 
 	fakeError.stack = "any";
 
-	return HttResponse.serverError(fakeError);
+	return HttpResponse.serverError(fakeError);
 }
