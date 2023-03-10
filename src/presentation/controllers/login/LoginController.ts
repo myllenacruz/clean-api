@@ -14,16 +14,20 @@ export class LoginController implements IController {
 
 	public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
 		try {
+			const requiredFields = [
+				"username",
+				"password"
+			];
+
 			const {
 				username,
 				password
 			} = httpRequest.body;
 
-			if (!username)
-				return HttResponse.badRequest(new MissingParamError("username"));
-
-			if (!password)
-				return HttResponse.badRequest(new MissingParamError("password"));
+			for (const field of requiredFields) {
+				if (!httpRequest.body[field])
+					return HttResponse.badRequest(new MissingParamError(field));
+			}
 
 			await this.authentication.auth(username, password);
 
