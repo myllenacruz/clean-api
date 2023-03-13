@@ -9,11 +9,13 @@ import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { invalidRequest, validRequest } from "@presentation/controllers/signUp/__tests__/mocks/httpRequest";
 import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/account";
 import { HttpResponse } from "@presentation/helpers/HttpResponse";
+import { IValidation } from "@presentation/helpers/validation/IValidation";
 
 interface ISystemUnderTest {
 	emailValidator: IEmailValidator;
 	createAccount: ICreateAccount;
 	systemUnderTest: SignUpController;
+	validation: IValidation
 }
 
 function makeEmailValidator() {
@@ -36,15 +38,27 @@ async function makeCreateAccount(): Promise<ICreateAccount> {
 	return new CreateAccount();
 }
 
+function makeValidation(): IValidation {
+	class Validation implements IValidation {
+		validate(input: any): Error | null {
+			return null;
+		}
+	}
+
+	return new Validation();
+}
+
 async function makeSystemUnderTest(): Promise<ISystemUnderTest> {
 	const emailValidator = makeEmailValidator();
 	const createAccount = await makeCreateAccount();
-	const systemUnderTest = new SignUpController(emailValidator, createAccount);
+	const validation = makeValidation();
+	const systemUnderTest = new SignUpController(emailValidator, createAccount, validation);
 
 	return {
 		systemUnderTest,
 		emailValidator,
-		createAccount
+		createAccount,
+		validation
 	};
 }
 
@@ -210,5 +224,14 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(validRequest);
 
 		expect(httpResponse).toEqual(HttpResponse.success(accountModel));
+	});
+
+	test("Should call Validation with correct values", async () => {
+		const { systemUnderTest, validation } = await makeSystemUnderTest();
+		const validateSpy = jest.spyOn(validation, "validate");
+
+		await systemUnderTest.handle(validRequest);
+
+		expect(validateSpy).toHaveBeenCalledWith(validRequest.body);
 	});
 });
