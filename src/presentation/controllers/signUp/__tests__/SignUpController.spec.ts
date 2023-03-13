@@ -2,30 +2,17 @@ import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
 import { ICreateAccountModel } from "@domain/useCases/account/ICreateAccountModel";
 import { SignUpController } from "@presentation/controllers/signUp/SignUpController";
-import { InvalidParamError } from "@presentation/errors/InvalidParamError";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { ServerError } from "@presentation/errors/ServerError";
-import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { invalidRequest, validRequest } from "@presentation/controllers/signUp/__tests__/mocks/httpRequest";
 import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/account";
 import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IValidation } from "@presentation/helpers/validation/IValidation";
 
 interface ISystemUnderTest {
-	emailValidator: IEmailValidator;
 	createAccount: ICreateAccount;
 	systemUnderTest: SignUpController;
 	validation: IValidation
-}
-
-function makeEmailValidator() {
-	class EmailValidator implements IEmailValidator {
-		isValid(email: string): boolean {
-			return true;
-		}
-	}
-
-	return new EmailValidator();
 }
 
 async function makeCreateAccount(): Promise<ICreateAccount> {
@@ -49,55 +36,18 @@ function makeValidation(): IValidation {
 }
 
 async function makeSystemUnderTest(): Promise<ISystemUnderTest> {
-	const emailValidator = makeEmailValidator();
 	const createAccount = await makeCreateAccount();
 	const validation = makeValidation();
-	const systemUnderTest = new SignUpController(emailValidator, createAccount, validation);
+	const systemUnderTest = new SignUpController(createAccount, validation);
 
 	return {
 		systemUnderTest,
-		emailValidator,
 		createAccount,
 		validation
 	};
 }
 
 describe("SignUp Controller", () => {
-	test("Should return 400 if an invalid email is provided", async () => {
-		const { systemUnderTest, emailValidator } = await makeSystemUnderTest();
-
-		jest.spyOn(emailValidator, "isValid").mockReturnValueOnce(false);
-
-		const httpResponse = await systemUnderTest.handle(invalidRequest);
-
-		expect(httpResponse).toEqual(
-			HttpResponse.badRequest(new InvalidParamError("email"))
-		);
-	});
-
-	test("Should call EmailValidator with correct email", async () => {
-		const { systemUnderTest, emailValidator } = await makeSystemUnderTest();
-
-		const isEmailValid = jest.spyOn(emailValidator, "isValid");
-
-		await systemUnderTest.handle(validRequest);
-		expect(isEmailValid).toHaveBeenCalledWith("janedoe@email.com");
-	});
-
-	test("Should return 500 if EmailValidator throws", async () => {
-		const { systemUnderTest, emailValidator } = await makeSystemUnderTest();
-
-		jest.spyOn(emailValidator, "isValid").mockImplementationOnce(() => {
-			throw new Error();
-		});
-
-		const httpResponse = await systemUnderTest.handle(invalidRequest);
-
-		expect(httpResponse).toEqual(
-			HttpResponse.serverError(new ServerError(""))
-		);
-	});
-
 	test("Should call CreateAccount with correct values", async () => {
 		const { systemUnderTest, createAccount } = await makeSystemUnderTest();
 
