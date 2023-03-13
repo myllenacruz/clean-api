@@ -8,6 +8,7 @@ import { invalidRequest, validRequest } from "@presentation/controllers/signUp/_
 import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/account";
 import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
 
 interface ISystemUnderTest {
 	createAccount: ICreateAccount;
@@ -27,7 +28,7 @@ async function makeCreateAccount(): Promise<ICreateAccount> {
 
 function makeValidation(): IValidation {
 	class Validation implements IValidation {
-		validate(input: any): Error | null {
+		validate(input: IInput): Error | null {
 			return null;
 		}
 	}
