@@ -2,6 +2,7 @@ import { LoginController } from "@presentation/controllers/login/LoginController
 import { HttpResponse } from "@presentation/helpers/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
+import { invalidRequest, validRequest } from "@presentation/controllers/login/__tests__/mocks/httpRequest";
 
 interface ISystemUnderTest {
 	systemUnderTest: LoginController;
@@ -20,7 +21,10 @@ function makeSystemUnderTest(): ISystemUnderTest {
 
 function makeAuthentication(): IAuthentication {
 	class Authentication implements IAuthentication {
-		async auth(username: string, password: string): Promise<string | null> {
+		async auth(
+			username: string,
+			password: string
+		): Promise<string> {
 			return "anyToken";
 		}
 	}
@@ -62,34 +66,32 @@ describe("LoginController", () => {
 
 		const authSpy = jest.spyOn(authentication, "auth");
 
-		const httpRequest = {
-			body: {
-				username: "janedoe",
-				password: "1234"
-			}
-		};
+		await systemUnderTest.handle(validRequest);
 
-		await systemUnderTest.handle(httpRequest);
-
-		expect(authSpy).toHaveBeenCalledWith("janedoe", "1234");
+		expect(authSpy).toHaveBeenCalledWith("janeDoe", "1234");
 	});
 
 	test("Should return 401 an invalid credentials are provided", async () => {
 		const { systemUnderTest, authentication } = makeSystemUnderTest();
 
 		jest.spyOn(authentication, "auth").mockReturnValueOnce(
-			new Promise(resolve => resolve(null))
+			new Promise(resolve => resolve(""))
 		);
 
-		const httpRequest = {
-			body: {
-				username: "janedoe",
-				password: "1234"
-			}
-		};
-
-		const httpResponse = await systemUnderTest.handle(httpRequest);
+		const httpResponse = await systemUnderTest.handle(invalidRequest);
 
 		expect(httpResponse).toEqual(HttpResponse.unauthorized());
+	});
+
+	test("Should return 500 if Authentication throws", async () => {
+		const { systemUnderTest, authentication } = makeSystemUnderTest();
+
+		jest.spyOn(authentication, "auth").mockImplementationOnce(() => {
+			throw new Error();
+		});
+
+		const httpResponse = await systemUnderTest.handle(invalidRequest);
+
+		expect(httpResponse).toEqual(HttpResponse.serverError(new Error()));
 	});
 });
