@@ -4,7 +4,6 @@ import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 import { HttpResponse } from "@presentation/helpers/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
-import { UnauthorizedError } from "@presentation/errors/UnauthorizedError";
 
 export class LoginController implements IController {
 	private readonly authentication: IAuthentication;
