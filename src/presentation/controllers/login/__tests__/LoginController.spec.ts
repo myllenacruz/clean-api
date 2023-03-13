@@ -94,4 +94,14 @@ describe("LoginController", () => {
 
 		expect(httpResponse).toEqual(HttpResponse.serverError(new Error()));
 	});
+
+	test("Should return 200 if valid credentials are provided", async () => {
+		const { systemUnderTest } = makeSystemUnderTest();
+
+		const httpResponse = await systemUnderTest.handle(validRequest);
+
+		expect(httpResponse).toEqual(HttpResponse.success({
+			accessToken: "anyToken"
+		}));
+	});
 });

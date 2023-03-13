@@ -29,11 +29,11 @@ export class LoginController implements IController {
 					return HttpResponse.badRequest(new MissingParamError(field));
 			}
 
-			const accesToken = await this.authentication.auth(username, password);
+			const accessToken = await this.authentication.auth(username, password);
 
-			if (!accesToken) return HttpResponse.unauthorized();
+			if (!accessToken) return HttpResponse.unauthorized();
 
-			return HttpResponse.success(httpRequest.body);
+			return HttpResponse.success({ accessToken });
 		} catch (error) {
 			return HttpResponse.serverError(error as Error);
 		}
