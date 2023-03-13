@@ -1,5 +1,5 @@
 import { LoginController } from "@presentation/controllers/login/LoginController";
-import { HttpResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
 import { invalidRequest, validRequest } from "@presentation/controllers/login/__tests__/mocks/httpRequest";

@@ -1,7 +1,7 @@
 import { IController } from "@presentation/protocols/controllers/IController";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
-import { HttpResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
 

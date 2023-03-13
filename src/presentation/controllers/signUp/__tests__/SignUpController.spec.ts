@@ -8,7 +8,7 @@ import { ServerError } from "@presentation/errors/ServerError";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { invalidRequest, validRequest } from "@presentation/controllers/signUp/__tests__/mocks/httpRequest";
 import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/account";
-import { HttpResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IValidation } from "@presentation/helpers/validation/IValidation";
 
 interface ISystemUnderTest {

@@ -1,5 +1,5 @@
 import { InvalidParamError } from "@presentation/errors/InvalidParamError";
-import { HttpResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IController } from "@presentation/protocols/controllers/IController";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";

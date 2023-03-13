@@ -1,4 +1,4 @@
-import { HttpResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 
 export function serverError(): IHttpResponse {

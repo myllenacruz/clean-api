@@ -2,7 +2,7 @@ import { LogControllerDecorator } from "@main/decorators/log/LogControllerDecora
 import { IController } from "@presentation/protocols/controllers/IController";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
-import { HttpResponse } from "@presentation/helpers/HttpResponse";
+import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { ILogErrorRepository } from "@data/protocols/log/ILogErrorRepository";
 import { validRequest } from "@main/decorators/log/__tests__/mocks/httpRequest";
 import { accountModel } from "@main/decorators/log/__tests__/mocks/account";
