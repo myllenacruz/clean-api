@@ -1,4 +1,5 @@
 import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
 
 export class ValidationComposite implements IValidation {
 	private readonly validations: IValidation[];
@@ -7,7 +8,7 @@ export class ValidationComposite implements IValidation {
 		this.validations = validations;
 	}
 
-	validate(input: any): Error | null {
+	public validate(input: IInput): Error | null {
 		for(const validation of this.validations) {
 			const error = validation.validate(input);
 

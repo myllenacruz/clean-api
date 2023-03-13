@@ -1,5 +1,6 @@
 import { IValidation } from "@presentation/helpers/validation/IValidation";
 import { InvalidParamError } from "@presentation/errors/InvalidParamError";
+import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
 
 export class CompareFieldsValidation implements IValidation {
 	private readonly field: string;
@@ -10,7 +11,7 @@ export class CompareFieldsValidation implements IValidation {
 		this.fieldToCompare = fieldToCompare;
 	}
 
-	public validate(input: any): Error | null {
+	public validate(input: IInput): Error | null {
 		if (input[this.field] !== input[this.fieldToCompare])
 			return new InvalidParamError(this.fieldToCompare);
 

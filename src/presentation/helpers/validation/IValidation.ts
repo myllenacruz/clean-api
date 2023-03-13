@@ -1,3 +1,5 @@
+import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+
 export interface IValidation {
-	validate(input: any): Error | null;
+	validate(input: IInput): Error | null;
 }
