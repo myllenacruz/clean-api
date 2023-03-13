@@ -234,4 +234,14 @@ describe("SignUp Controller", () => {
 
 		expect(validateSpy).toHaveBeenCalledWith(validRequest.body);
 	});
+
+	test("Should return 400 if Validation returns an error", async () => {
+		const { systemUnderTest, validation } = await makeSystemUnderTest();
+
+		jest.spyOn(validation, "validate").mockReturnValueOnce(new MissingParamError("field"));
+
+		const httpResponse = await systemUnderTest.handle(validRequest);
+
+		expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError("field")));
+	});
 });
