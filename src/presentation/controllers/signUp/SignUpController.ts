@@ -10,12 +10,12 @@ import { IValidation } from "@presentation/helpers/validation/IValidation";
 export class SignUpController implements IController {
 	private readonly emailValidator: IEmailValidator;
 	private readonly createAccount: ICreateAccount;
-	private readonly validation?: IValidation;
+	private readonly validation: IValidation;
 
 	constructor(
 		emailValidator: IEmailValidator,
 		createAccount: ICreateAccount,
-		validation?: IValidation
+		validation: IValidation
 	) {
 		this.emailValidator = emailValidator;
 		this.createAccount = createAccount;
@@ -24,7 +24,7 @@ export class SignUpController implements IController {
 
 	public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
 		try {
-			const error = this.validation?.validate(httpRequest.body);
+			const error = this.validation.validate(httpRequest.body);
 
 			if (error) return HttpResponse.badRequest(error);
 
