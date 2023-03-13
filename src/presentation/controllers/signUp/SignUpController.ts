@@ -24,22 +24,18 @@ export class SignUpController implements IController {
 
 	public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
 		try {
-			const error = this.validation.validate(httpRequest.body);
+			const validationError = this.validation.validate(httpRequest.body);
 
-			if (error) return HttpResponse.badRequest(error);
+			if (validationError) return HttpResponse.badRequest(validationError);
 
 			const {
 				username,
 				email,
-				password,
-				passwordConfirmation
+				password
 			} = httpRequest.body;
 
 			if (!this.emailValidator.isValid(email))
 				return HttpResponse.badRequest(new InvalidParamError("email"));
-
-			if (password !== passwordConfirmation)
-				return HttpResponse.badRequest(new InvalidParamError("passwordConfirmation"));
 
 			const account = await this.createAccount.handle({
 				username,

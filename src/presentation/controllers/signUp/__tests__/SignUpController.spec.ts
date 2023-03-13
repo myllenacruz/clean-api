@@ -63,27 +63,6 @@ async function makeSystemUnderTest(): Promise<ISystemUnderTest> {
 }
 
 describe("SignUp Controller", () => {
-	test("Should return 400 if password confirmation fails", async () => {
-		const { systemUnderTest } = await makeSystemUnderTest();
-
-		const httpRequest = {
-			body: {
-				email: "janedoe@email.com",
-				password: "1234",
-				passwordConfirmation: "invalid",
-				username: "janedoe"
-			}
-		};
-
-		const httpResponse = await systemUnderTest.handle(httpRequest);
-
-		expect(httpResponse.statusCode).toBe(400);
-
-		expect(httpResponse).toEqual(
-			HttpResponse.badRequest(new InvalidParamError("passwordConfirmation"))
-		);
-	});
-
 	test("Should return 400 if an invalid email is provided", async () => {
 		const { systemUnderTest, emailValidator } = await makeSystemUnderTest();
 
