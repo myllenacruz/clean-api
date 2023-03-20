@@ -2,32 +2,32 @@ import { IController } from "@presentation/protocols/controllers/IController";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
-import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
+import { IValidation } from "@presentation/helpers/validation/IValidation";
 
 export class LoginController implements IController {
 	private readonly authentication: IAuthentication;
+	private readonly validation: IValidation;
 
-	constructor(authentication: IAuthentication) {
+	constructor(
+		authentication: IAuthentication,
+		validation: IValidation
+	) {
 		this.authentication = authentication;
+		this.validation = validation;
 	}
 
 	public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
 		try {
-			const requiredFields = [
-				"username",
-				"password"
-			];
-
 			const {
 				username,
 				password
 			} = httpRequest.body;
 
-			for (const field of requiredFields) {
-				if (!httpRequest.body[field])
-					return HttpResponse.badRequest(new MissingParamError(field));
-			}
+			const validationError = this.validation.validate(httpRequest.body);
+
+			if (validationError)
+				return HttpResponse.badRequest(validationError);
 
 			const accessToken = await this.authentication.auth(username, password);
 

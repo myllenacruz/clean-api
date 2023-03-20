@@ -3,19 +3,24 @@ import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
 import { invalidRequest, validRequest } from "@presentation/controllers/login/__tests__/mocks/httpRequest";
+import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
 
 interface ISystemUnderTest {
 	systemUnderTest: LoginController;
 	authentication: IAuthentication;
+	validation: IValidation;
 }
 
 function makeSystemUnderTest(): ISystemUnderTest {
 	const authentication = makeAuthentication();
-	const systemUnderTest = new LoginController(authentication);
+	const validation = makeValidation();
+	const systemUnderTest = new LoginController(authentication, validation);
 
 	return {
 		systemUnderTest,
-		authentication
+		authentication,
+		validation
 	};
 }
 
@@ -32,35 +37,17 @@ function makeAuthentication(): IAuthentication {
 	return new Authentication();
 }
 
+function makeValidation(): IValidation {
+	class Validation implements IValidation {
+		validate(input: IInput): Error | null {
+			return null;
+		}
+	}
+
+	return new Validation();
+}
+
 describe("LoginController", () => {
-	test("Should return 400 if no username is provided", async () => {
-		const { systemUnderTest } = makeSystemUnderTest();
-
-		const httpRequest = {
-			body: {
-				password: "1234"
-			}
-		};
-
-		const httpResponse = await systemUnderTest.handle(httpRequest);
-
-		expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError("username")));
-	});
-
-	test("Should return 400 if no password is provided", async () => {
-		const { systemUnderTest } = makeSystemUnderTest();
-
-		const httpRequest = {
-			body: {
-				username: "janedoe"
-			}
-		};
-
-		const httpResponse = await systemUnderTest.handle(httpRequest);
-
-		expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError("password")));
-	});
-
 	test("Should call Authentication with correct values", async () => {
 		const { systemUnderTest , authentication } = makeSystemUnderTest();
 
@@ -103,5 +90,24 @@ describe("LoginController", () => {
 		expect(httpResponse).toEqual(HttpResponse.success({
 			accessToken: "anyToken"
 		}));
+	});
+
+	test("Should call Validation with correct values", async () => {
+		const { systemUnderTest, validation } = makeSystemUnderTest();
+		const validateSpy = jest.spyOn(validation, "validate");
+
+		await systemUnderTest.handle(validRequest);
+
+		expect(validateSpy).toHaveBeenCalledWith(validRequest.body);
+	});
+
+	test("Should return 400 if Validation returns an error", async () => {
+		const { systemUnderTest, validation } = makeSystemUnderTest();
+
+		jest.spyOn(validation, "validate").mockReturnValueOnce(new MissingParamError("field"));
+
+		const httpResponse = await systemUnderTest.handle(validRequest);
+
+		expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError("field")));
 	});
 });
