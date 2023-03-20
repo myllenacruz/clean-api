@@ -5,7 +5,7 @@ import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
 
 interface ISystemUnderTest {
 	systemUnderTest: ValidationComposite;
-	validation: IValidation;
+	validations: IValidation[];
 }
 
 function makeValidation(): IValidation {
@@ -19,23 +19,41 @@ function makeValidation(): IValidation {
 }
 
 function makeSystemUnderTest(): ISystemUnderTest {
-	const validation = makeValidation();
-	const systemUnderTest = new ValidationComposite([validation]);
+	const validations = [makeValidation(), makeValidation()];
+	const systemUnderTest = new ValidationComposite(validations);
 
 	return {
-		validation,
+		validations,
 		systemUnderTest
 	};
 }
 
 describe("ValidationComposite", () => {
 	test("Should return an error if any validation fails", () => {
-		const { systemUnderTest, validation } = makeSystemUnderTest();
+		const { systemUnderTest, validations } = makeSystemUnderTest();
 
-		jest.spyOn(validation, "validate").mockReturnValue(new MissingParamError("field"));
+		jest.spyOn(validations[0], "validate").mockReturnValue(
+			new MissingParamError("field")
+		);
 
 		const error = systemUnderTest.validate({ field: "anyValue" });
 
 		expect(error).toEqual(new MissingParamError("field"));
+	});
+
+	test("Should return the first error if more then one validation fails", () => {
+		const { systemUnderTest, validations } = makeSystemUnderTest();
+
+		jest.spyOn(validations[0], "validate").mockReturnValue(
+			new Error()
+		);
+
+		jest.spyOn(validations[1], "validate").mockReturnValue(
+			new MissingParamError("field")
+		);
+
+		const error = systemUnderTest.validate({ field: "anyValue" });
+
+		expect(error).toEqual(new Error());
 	});
 });
