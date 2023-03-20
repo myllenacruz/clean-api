@@ -56,4 +56,11 @@ describe("ValidationComposite", () => {
 
 		expect(error).toEqual(new Error());
 	});
+
+	test("Should not return if validation succeeds", () => {
+		const { systemUnderTest } = makeSystemUnderTest();
+		const error = systemUnderTest.validate({ field: "anyValue" });
+
+		expect(error).toBeFalsy();
+	});
 });
