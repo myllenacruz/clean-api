@@ -1,6 +1,6 @@
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { InvalidParamError } from "@presentation/errors/InvalidParamError";
-import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+import { IInput } from "@presentation/protocols/validation/IInput";
 
 export class CompareFieldsValidation implements IValidation {
 	private readonly field: string;

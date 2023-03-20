@@ -1,7 +1,7 @@
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";
 import { InvalidParamError } from "@presentation/errors/InvalidParamError";
-import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+import { IInput } from "@presentation/protocols/validation/IInput";
 
 export class EmailValidation implements IValidation {
 	private readonly field: string;

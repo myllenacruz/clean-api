@@ -3,7 +3,7 @@ import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 
 export class LoginController implements IController {
 	private readonly authentication: IAuthentication;

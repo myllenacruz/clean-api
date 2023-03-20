@@ -7,8 +7,8 @@ import { ServerError } from "@presentation/errors/ServerError";
 import { invalidRequest, validRequest } from "@presentation/controllers/signUp/__tests__/mocks/httpRequest";
 import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/account";
 import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
-import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
+import { IInput } from "@presentation/protocols/validation/IInput";
 
 interface ISystemUnderTest {
 	createAccount: ICreateAccount;

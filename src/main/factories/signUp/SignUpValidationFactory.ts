@@ -1,5 +1,5 @@
 import { CompareFieldsValidation } from "@presentation/helpers/validation/fields/CompareFieldsValidation";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { RequiredFieldValidation } from "@presentation/helpers/validation/fields/RequiredFieldValidation";
 import { ValidationComposite } from "@presentation/helpers/validation/ValidationComposite";
 import { EmailValidation } from "@presentation/helpers/validation/email/EmailValidation";

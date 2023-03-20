@@ -1,7 +1,7 @@
 import { ValidationComposite } from "@presentation/helpers/validation/ValidationComposite";
 import { LoginValidationFactory } from "@main/factories/login/LoginValidationFactory";
 import { RequiredFieldValidation } from "@presentation/helpers/validation/fields/RequiredFieldValidation";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 
 jest.mock("@presentation/helpers/validation/ValidationComposite");
 

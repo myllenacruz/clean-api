@@ -1,7 +1,7 @@
 import { ValidationComposite } from "@presentation/helpers/validation/ValidationComposite";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
-import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
+import { IInput } from "@presentation/protocols/validation/IInput";
 
 interface ISystemUnderTest {
 	systemUnderTest: ValidationComposite;

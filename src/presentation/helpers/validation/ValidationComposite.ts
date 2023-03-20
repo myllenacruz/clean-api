@@ -1,5 +1,5 @@
-import { IValidation } from "@presentation/helpers/validation/IValidation";
-import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
+import { IInput } from "@presentation/protocols/validation/IInput";
 
 export class ValidationComposite implements IValidation {
 	private readonly validations: IValidation[];

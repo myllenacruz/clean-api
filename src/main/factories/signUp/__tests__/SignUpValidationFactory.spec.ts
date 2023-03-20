@@ -1,7 +1,7 @@
 import { ValidationComposite } from "@presentation/helpers/validation/ValidationComposite";
 import { SignUpValidationFactory } from "@main/factories/signUp/SignUpValidationFactory";
 import { RequiredFieldValidation } from "@presentation/helpers/validation/fields/RequiredFieldValidation";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { CompareFieldsValidation } from "@presentation/helpers/validation/fields/CompareFieldsValidation";
 import { EmailValidation } from "@presentation/helpers/validation/email/EmailValidation";
 import { IEmailValidator } from "@presentation/protocols/email/IEmailValidator";

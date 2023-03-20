@@ -3,7 +3,7 @@ import { IController } from "@presentation/protocols/controllers/IController";
 import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 
 export class SignUpController implements IController {
 	private readonly createAccount: ICreateAccount;

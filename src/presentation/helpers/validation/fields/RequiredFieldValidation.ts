@@ -1,6 +1,6 @@
-import { IValidation } from "@presentation/helpers/validation/IValidation";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
-import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+import { IInput } from "@presentation/protocols/validation/IInput";
 
 export class RequiredFieldValidation implements IValidation {
 	private readonly field: string;

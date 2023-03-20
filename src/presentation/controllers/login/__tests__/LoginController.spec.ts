@@ -3,8 +3,8 @@ import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
 import { invalidRequest, validRequest } from "@presentation/controllers/login/__tests__/mocks/httpRequest";
-import { IValidation } from "@presentation/helpers/validation/IValidation";
-import { IInput } from "@presentation/helpers/validation/interfaces/IInput";
+import { IValidation } from "@presentation/protocols/validation/IValidation";
+import { IInput } from "@presentation/protocols/validation/IInput";
 
 interface ISystemUnderTest {
 	systemUnderTest: LoginController;
