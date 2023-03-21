@@ -9,6 +9,6 @@ export default (app: Express): void => {
 	fastGlob
 		.sync("**/src/main/routes/*/**.routes.ts")
 		.map(async file => {
-			(await import(`../../../${file}`)).default(router);
+			(await import(`../../../../${file}`)).default(router);
 		});
 };
