@@ -3,11 +3,13 @@ import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
+import { ITokenGenerator } from "@data/protocols/cryptography/token/ITokenGenerator";
 
 interface ISystemUnderTest {
 	systemUnderTest: AuthenticationData;
 	loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 	hashComparer: IHashComparer;
+	tokenGenerator: ITokenGenerator;
 }
 
 function makeFakeAccount(): IAccountModel {
@@ -46,15 +48,31 @@ function makeHashComparer(): IHashComparer {
 	return new HashComparer();
 }
 
+function makeTokenGenerator(): ITokenGenerator {
+	class TokenGenerator implements ITokenGenerator {
+		async generate(id: string): Promise<string> {
+			return new Promise(resolve => resolve("validToken"));
+		}
+	}
+
+	return new TokenGenerator();
+}
+
 function makeSystemUnderTest(): ISystemUnderTest {
 	const loadAccountByUsernameRepository = makeLoadAccountByUsernameRepository();
 	const hashComparer = makeHashComparer();
-	const systemUnderTest = new AuthenticationData(loadAccountByUsernameRepository, hashComparer);
+	const tokenGenerator = makeTokenGenerator();
+	const systemUnderTest = new AuthenticationData(
+		loadAccountByUsernameRepository,
+		hashComparer,
+		tokenGenerator
+	);
 
 	return {
 		systemUnderTest,
 		loadAccountByUsernameRepository,
-		hashComparer
+		hashComparer,
+		tokenGenerator
 	};
 }
 
@@ -113,5 +131,14 @@ describe("AuthenticationDatabase", () => {
 		const accesToken = await systemUnderTest.auth(makeFakeAuthentication());
 
 		expect(accesToken).toBe("");
+	});
+
+	test("Should call TokenGenerator with correct id", async () => {
+		const { systemUnderTest, tokenGenerator } = makeSystemUnderTest();
+		const generateSpy = jest.spyOn(tokenGenerator, "generate");
+
+		await systemUnderTest.auth(makeFakeAuthentication());
+
+		expect(generateSpy).toHaveBeenCalledWith("validId");
 	});
 });
