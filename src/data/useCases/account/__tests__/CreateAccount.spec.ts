@@ -1,6 +1,6 @@
 import { IEncrypter } from "@data/protocols/encrypter/IEncrypter";
 import { CreateAccountData } from "@data/useCases/account/CreateAccountData";
-import { ICreateAccountModel } from "@domain/useCases/account/ICreateAccountModel";
+import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
 import { accountModel } from "@data/useCases/account/__tests__/mocks/account";

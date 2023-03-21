@@ -1,10 +1,10 @@
-import { AuthenticationDatabase } from "../AuthenticationDatabase";
+import { AuthenticationData } from "../AuthenticationData";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
-import { IAuthenticationModel } from "@domain/useCases/authentication/IAuthenticationModel";
+import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 
 interface ISystemUnderTest {
-	systemUnderTest: AuthenticationDatabase;
+	systemUnderTest: AuthenticationData;
 	loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 }
 
@@ -36,7 +36,7 @@ function makeLoadAccountByUsernameRepository(): ILoadAccountByUsernameRepository
 
 function makeSystemUnderTest(): ISystemUnderTest {
 	const loadAccountByUsernameRepository = makeLoadAccountByUsernameRepository();
-	const systemUnderTest = new AuthenticationDatabase(loadAccountByUsernameRepository);
+	const systemUnderTest = new AuthenticationData(loadAccountByUsernameRepository);
 
 	return {
 		systemUnderTest,

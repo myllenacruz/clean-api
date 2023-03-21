@@ -1,4 +1,4 @@
-import { ICreateAccountModel } from "@domain/useCases/account/ICreateAccountModel";
+import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
 
 export const accountData: ICreateAccountModel = {
 	username: "janedoe",

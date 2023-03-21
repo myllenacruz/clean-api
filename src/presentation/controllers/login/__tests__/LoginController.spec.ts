@@ -5,7 +5,7 @@ import { IAuthentication } from "@domain/useCases/authentication/IAuthentication
 import { invalidRequest, validRequest } from "@presentation/controllers/login/__tests__/mocks/httpRequest";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { IInput } from "@presentation/protocols/validation/IInput";
-import { IAuthenticationModel } from "@domain/useCases/authentication/IAuthenticationModel";
+import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 
 interface ISystemUnderTest {
 	systemUnderTest: LoginController;
