@@ -17,7 +17,7 @@ describe("BCryptAdapter", () => {
 		const systemUnderTest = makeSystemUnderTest();
 		const hash = jest.spyOn(bcrypt, "hash");
 
-		await systemUnderTest.encrypt("value");
+		await systemUnderTest.hash("value");
 
 		expect(hash).toHaveBeenCalledWith("value", salt);
 	});
@@ -29,14 +29,14 @@ describe("BCryptAdapter", () => {
 			throw new Error();
 		});
 
-		const promise = systemUnderTest.encrypt("value");
+		const promise = systemUnderTest.hash("value");
 
 		await expect(promise).rejects.toThrow();
 	});
 
 	test("Should return a hash on success", async () => {
 		const systemUnderTest = makeSystemUnderTest();
-		const hash = await systemUnderTest.encrypt("value");
+		const hash = await systemUnderTest.hash("value");
 
 		expect(hash).toBe("hashedValue");
 	});

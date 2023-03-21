@@ -1,4 +1,4 @@
-import { IEncrypter } from "@data/protocols/cryptography/encrypter/IEncrypter";
+import { IHasher } from "@data/protocols/cryptography/hash/IHasher";
 import { CreateAccountData } from "@data/useCases/account/CreateAccountData";
 import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
@@ -7,19 +7,19 @@ import { accountModel } from "@data/useCases/account/__tests__/mocks/account";
 import { accountData } from "@data/useCases/account/__tests__/mocks/accountData";
 
 interface ISystemUnderTest {
-	encrypter: IEncrypter;
+	hasher: IHasher;
 	systemUnderTest: CreateAccountData;
 	createAccountRepository: ICreateAccountRepository;
 }
 
-function makeEncrypter(): IEncrypter {
-	class Encrypter implements IEncrypter {
-		async encrypt(value: string): Promise<string> {
+function makeHasher(): IHasher {
+	class Hasher implements IHasher {
+		async hash(value: string): Promise<string> {
 			return new Promise(resolve => resolve("hashedValue"));
 		}
 	}
 
-	return new Encrypter();
+	return new Hasher();
 }
 
 function makeCreateAccountRepository(): ICreateAccountRepository {
@@ -33,22 +33,22 @@ function makeCreateAccountRepository(): ICreateAccountRepository {
 }
 
 function makeSystemUnderTest(): ISystemUnderTest {
-	const encrypter = makeEncrypter();
+	const hasher = makeHasher();
 	const createAccountRepository = makeCreateAccountRepository();
-	const systemUnderTest = new CreateAccountData(encrypter, createAccountRepository);
+	const systemUnderTest = new CreateAccountData(hasher, createAccountRepository);
 
 	return {
-		encrypter,
+		hasher,
 		systemUnderTest,
 		createAccountRepository
 	};
 }
 
 describe("CreateAccountData", () => {
-	test("Should call Encrypter with correct password", async () => {
-		const { systemUnderTest, encrypter } = makeSystemUnderTest();
+	test("Should call Hasher with correct password", async () => {
+		const { systemUnderTest, hasher } = makeSystemUnderTest();
 
-		const encryptSpy = jest.spyOn(encrypter, "encrypt");
+		const hasherSpy = jest.spyOn(hasher, "hash");
 
 		const accountData = {
 			username: "janedoe",
@@ -58,13 +58,13 @@ describe("CreateAccountData", () => {
 
 		await systemUnderTest.handle(accountData);
 
-		expect(encryptSpy).toHaveBeenCalledWith("1234");
+		expect(hasherSpy).toHaveBeenCalledWith("1234");
 	});
 
-	test("Should throw if Encrypter throws", async () => {
-		const { systemUnderTest, encrypter } = makeSystemUnderTest();
+	test("Should throw if Hasher throws", async () => {
+		const { systemUnderTest, hasher } = makeSystemUnderTest();
 
-		jest.spyOn(encrypter, "encrypt").mockReturnValueOnce(
+		jest.spyOn(hasher, "hash").mockReturnValueOnce(
 			new Promise((resolve, reject) => {
 			    reject(new Error());
 			})
