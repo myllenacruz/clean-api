@@ -60,4 +60,14 @@ describe("BCryptAdapter", () => {
 
 		expect(isValid).toBe(true);
 	});
+
+	test("Should return false when compare fails", async () => {
+		const systemUnderTest = makeSystemUnderTest();
+
+		jest.spyOn(bcrypt, "compare").mockImplementationOnce(() => false);
+
+		const isValid = await systemUnderTest.compare("value", "hash");
+
+		expect(isValid).toBe(false);
+	});
 });
