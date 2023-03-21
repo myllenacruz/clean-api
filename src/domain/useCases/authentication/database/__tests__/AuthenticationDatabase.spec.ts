@@ -47,10 +47,20 @@ function makeSystemUnderTest(): ISystemUnderTest {
 describe("AuthenticationDatabase", () => {
 	test("Should call LoadAccountByUsernameRepository with correct username", async () => {
 		const { systemUnderTest, loadAccountByUsernameRepository } = makeSystemUnderTest();
-		const loadSyp = jest.spyOn(loadAccountByUsernameRepository, "load");
+		const loadSpy = jest.spyOn(loadAccountByUsernameRepository, "load");
 
 		await systemUnderTest.auth(makeFakeAuthentication());
 
-		expect(loadSyp).toHaveBeenCalledWith("janeDoe");
+		expect(loadSpy).toHaveBeenCalledWith("janeDoe");
+	});
+
+	test("Should throw if LoadAccountByUsernameRepository throws", async () => {
+		const { systemUnderTest, loadAccountByUsernameRepository } = makeSystemUnderTest();
+
+		jest.spyOn(loadAccountByUsernameRepository, "load").mockImplementationOnce(() => {
+			throw new Error();
+		});
+
+		await expect(systemUnderTest.auth(makeFakeAuthentication())).rejects.toThrow();
 	});
 });
