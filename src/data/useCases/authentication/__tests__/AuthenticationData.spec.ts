@@ -62,7 +62,7 @@ function makeEncrypterGenerator(): IEncrypter {
 
 function makeUpdateAccessTokenRepository(): IUpdateAccessTokenRepository {
 	class UpdateAccessTokenRepository implements IUpdateAccessTokenRepository {
-		async update(id: string, token: string): Promise<void> {
+		async updateAccessToken(id: string, token: string): Promise<void> {
 			return new Promise(resolve => resolve());
 		}
 	}
@@ -178,7 +178,7 @@ describe("AuthenticationDatabase", () => {
 
 	test("Should call UpdateAccessTokenRepository with correct values", async () => {
 		const { systemUnderTest, updateAccessTokenRepository } = makeSystemUnderTest();
-		const updateSpy = jest.spyOn(updateAccessTokenRepository, "update");
+		const updateSpy = jest.spyOn(updateAccessTokenRepository, "updateAccessToken");
 
 		await systemUnderTest.auth(makeFakeAuthentication());
 
