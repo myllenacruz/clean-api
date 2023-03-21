@@ -24,7 +24,7 @@ export class AuthenticationData implements IAuthentication {
 	}
 
 	public async auth(authentication: IAuthenticationModel): Promise<string> {
-		const account = await this.loadAccountByUsernameRepository.load(authentication.username);
+		const account = await this.loadAccountByUsernameRepository.loadByUsername(authentication.username);
 
 		if (account) {
 			const isValid = await this.hashComparer.compare(authentication.password, account.password);

@@ -32,7 +32,7 @@ function makeFakeAuthentication(): IAuthenticationModel {
 
 function makeLoadAccountByUsernameRepository(): ILoadAccountByUsernameRepository {
 	class LoadAccountByUsernameRepository implements ILoadAccountByUsernameRepository {
-		async load(username: string): Promise<IAccountModel> {
+		async loadByUsername(username: string): Promise<IAccountModel> {
 			return new Promise(resolve => resolve(makeFakeAccount()));
 		}
 	}
@@ -94,7 +94,7 @@ function makeSystemUnderTest(): ISystemUnderTest {
 describe("AuthenticationDatabase", () => {
 	test("Should call LoadAccountByUsernameRepository with correct username", async () => {
 		const { systemUnderTest, loadAccountByUsernameRepository } = makeSystemUnderTest();
-		const loadSpy = jest.spyOn(loadAccountByUsernameRepository, "load");
+		const loadSpy = jest.spyOn(loadAccountByUsernameRepository, "loadByUsername");
 
 		await systemUnderTest.auth(makeFakeAuthentication());
 
@@ -104,7 +104,7 @@ describe("AuthenticationDatabase", () => {
 	test("Should throw if LoadAccountByUsernameRepository throws", async () => {
 		const { systemUnderTest, loadAccountByUsernameRepository } = makeSystemUnderTest();
 
-		jest.spyOn(loadAccountByUsernameRepository, "load").mockImplementationOnce(() => {
+		jest.spyOn(loadAccountByUsernameRepository, "loadByUsername").mockImplementationOnce(() => {
 			throw new Error();
 		});
 
