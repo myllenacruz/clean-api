@@ -20,7 +20,7 @@ export default {
 		"<rootDir>/src/presentation/protocols/*",
 		"<rootDir>/src/presentation/errors/*",
 		"<rootDir>/src/presentation/helpers/*",
-		"<rootDir>/src/domain/models/account/",
+		"<rootDir>/src/domain/models/*",
 		"<rootDir>/src/domain/useCases/account/",
 		"<rootDir>/src/domain/useCases/authentication/",
 		"<rootDir>/src/data/protocols/*",

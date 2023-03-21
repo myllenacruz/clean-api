@@ -1,4 +1,4 @@
-import { IEncrypter } from "@data/protocols/encrypter/IEncrypter";
+import { IEncrypter } from "@data/protocols/cryptography/encrypter/IEncrypter";
 import { CreateAccountData } from "@data/useCases/account/CreateAccountData";
 import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
 import { IAccountModel } from "@domain/models/account/IAccountModel";

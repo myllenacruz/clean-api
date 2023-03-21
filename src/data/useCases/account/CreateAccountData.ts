@@ -1,7 +1,7 @@
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
 import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
-import { IEncrypter } from "@data/protocols/encrypter/IEncrypter";
+import { IEncrypter } from "@data/protocols/cryptography/encrypter/IEncrypter";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
 
 export class CreateAccountData implements ICreateAccount {

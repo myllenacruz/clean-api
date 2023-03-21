@@ -2,10 +2,12 @@ import { AuthenticationData } from "../AuthenticationData";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
+import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
 
 interface ISystemUnderTest {
 	systemUnderTest: AuthenticationData;
 	loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
+	hashComparer: IHashComparer;
 }
 
 function makeFakeAccount(): IAccountModel {
@@ -13,7 +15,7 @@ function makeFakeAccount(): IAccountModel {
 		id: "validId",
 		username: "janeDoe",
 		email: "janedoe@email.com",
-		password: "1234"
+		password: "hashedPassword"
 	};
 }
 
@@ -34,13 +36,25 @@ function makeLoadAccountByUsernameRepository(): ILoadAccountByUsernameRepository
 	return new LoadAccountByUsernameRepository();
 }
 
+function makeHashComparer(): IHashComparer {
+	class HashComparer implements IHashComparer {
+		async compare(value: string, hash: string): Promise<boolean> {
+			return new Promise(resolve => resolve(true));
+		}
+	}
+
+	return new HashComparer();
+}
+
 function makeSystemUnderTest(): ISystemUnderTest {
 	const loadAccountByUsernameRepository = makeLoadAccountByUsernameRepository();
-	const systemUnderTest = new AuthenticationData(loadAccountByUsernameRepository);
+	const hashComparer = makeHashComparer();
+	const systemUnderTest = new AuthenticationData(loadAccountByUsernameRepository, hashComparer);
 
 	return {
 		systemUnderTest,
-		loadAccountByUsernameRepository
+		loadAccountByUsernameRepository,
+		hashComparer
 	};
 }
 
@@ -62,5 +76,14 @@ describe("AuthenticationDatabase", () => {
 		});
 
 		await expect(systemUnderTest.auth(makeFakeAuthentication())).rejects.toThrow();
+	});
+
+	test("Should call HashComparer with correct values", async () => {
+		const { systemUnderTest, hashComparer } = makeSystemUnderTest();
+		const compareSpy = jest.spyOn(hashComparer, "compare");
+
+		await systemUnderTest.auth(makeFakeAuthentication());
+
+		expect(compareSpy).toHaveBeenCalledWith("1234", "hashedPassword");
 	});
 });
