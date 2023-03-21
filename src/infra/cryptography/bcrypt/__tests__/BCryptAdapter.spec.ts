@@ -4,6 +4,10 @@ import { BCryptAdapter } from "@infra/cryptography/bcrypt/BCryptAdapter";
 jest.mock("bcrypt", () => ({
 	async hash(): Promise<string> {
 		return new Promise(resolve => resolve("hashedValue"));
+	},
+
+	async compare(): Promise<boolean> {
+		return new Promise(resolve => resolve(true));
 	}
 }));
 
@@ -13,7 +17,7 @@ function makeSystemUnderTest(): BCryptAdapter {
 }
 
 describe("BCryptAdapter", () => {
-	test("Should call bcrypt with correct values", async () => {
+	test("Should call hash with correct values", async () => {
 		const systemUnderTest = makeSystemUnderTest();
 		const hash = jest.spyOn(bcrypt, "hash");
 
@@ -34,10 +38,19 @@ describe("BCryptAdapter", () => {
 		await expect(promise).rejects.toThrow();
 	});
 
-	test("Should return a hash on success", async () => {
+	test("Should return a valid hash on hash success", async () => {
 		const systemUnderTest = makeSystemUnderTest();
 		const hash = await systemUnderTest.hash("value");
 
 		expect(hash).toBe("hashedValue");
+	});
+
+	test("Should call compare with correct values", async () => {
+		const systemUnderTest = makeSystemUnderTest();
+		const hash = jest.spyOn(bcrypt, "compare");
+
+		await systemUnderTest.compare("value", "hash");
+
+		expect(hash).toHaveBeenCalledWith("value", "hash");
 	});
 });
