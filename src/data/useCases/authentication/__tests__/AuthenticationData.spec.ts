@@ -141,4 +141,16 @@ describe("AuthenticationDatabase", () => {
 
 		expect(generateSpy).toHaveBeenCalledWith("validId");
 	});
+
+	test("Should throw if TokenGenerator throws", async () => {
+		const { systemUnderTest, tokenGenerator } = makeSystemUnderTest();
+
+		jest.spyOn(tokenGenerator, "generate").mockImplementationOnce(() => {
+			throw new Error();
+		});
+
+		await expect(
+			systemUnderTest.auth(makeFakeAuthentication())
+		).rejects.toThrow();
+	});
 });
