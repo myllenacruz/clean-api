@@ -57,4 +57,23 @@ describe("AccountMongoDbRepository", () => {
 
 		expect(account).toBeFalsy();
 	});
+
+	test("Should update the account accessToken on UpdateAccessToken success", async () => {
+		const systemUnderTest = new AccountMongoDbRepository();
+
+		const account = await accountCollection.insertOne({
+			username: "janeDoe",
+			email: "valid@email.com",
+			password: "1234"
+		});
+
+		await systemUnderTest.updateAccessToken(account.insertedId.toHexString(), "validToken");
+
+		const accountFounded = await accountCollection.findOne({
+			_id: account.insertedId
+		});
+
+		expect(accountFounded).toBeTruthy();
+		expect(accountFounded!.accessToken).toBe("validToken");
+	});
 });

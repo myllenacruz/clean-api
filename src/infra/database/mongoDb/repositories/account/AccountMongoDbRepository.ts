@@ -3,8 +3,14 @@ import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
 import { MongoHelper } from "@infra/database/mongoDb/helpers/MongoHelper";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
+import { IUpdateAccessTokenRepository } from "@data/protocols/cryptography/token/IUpdateAccessTokenRepository";
+import { ObjectId } from "mongodb";
 
-export class AccountMongoDbRepository implements ICreateAccountRepository, ILoadAccountByUsernameRepository {
+export class AccountMongoDbRepository implements
+	ICreateAccountRepository,
+	ILoadAccountByUsernameRepository,
+	IUpdateAccessTokenRepository
+{
 	public async create(accountData: ICreateAccountModel): Promise<IAccountModel> {
 		const accountCollection = MongoHelper.getCollection("accounts");
 
@@ -23,5 +29,20 @@ export class AccountMongoDbRepository implements ICreateAccountRepository, ILoad
 
 		if (account)
 			return MongoHelper.mapper(account);
+	}
+
+	public async updateAccessToken(
+		id: string,
+		token: string
+	): Promise<void> {
+		const accountCollection = MongoHelper.getCollection("accounts");
+
+		await accountCollection.updateOne({
+			_id: new ObjectId(id)
+		}, {
+			$set: {
+				accessToken: token
+			}
+		});
 	}
 }
