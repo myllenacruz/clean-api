@@ -2,7 +2,7 @@
  
  Its currently available features are: 
 - ✅ SignUp 
-- Login (In progress)
+- ✅ Login
 _______
 > ### Design Patterns:
   ##### Factory - Aims to provide an interface for creating objects of various classes without specifying the concrete class.
