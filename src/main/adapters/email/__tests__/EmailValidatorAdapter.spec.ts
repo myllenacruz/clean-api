@@ -1,4 +1,4 @@
-import { EmailValidatorAdapter } from "@utils/email/EmailValidatorAdapter";
+import { EmailValidatorAdapter } from "@main/adapters/email/EmailValidatorAdapter";
 import validator from "validator";
 
 function makeSut(): EmailValidatorAdapter {

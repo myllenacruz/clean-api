@@ -3,7 +3,7 @@ import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { RequiredFieldValidation } from "@presentation/helpers/validation/fields/RequiredFieldValidation";
 import { ValidationComposite } from "@presentation/helpers/validation/ValidationComposite";
 import { EmailValidation } from "@presentation/helpers/validation/email/EmailValidation";
-import { EmailValidatorAdapter } from "@utils/email/EmailValidatorAdapter";
+import { EmailValidatorAdapter } from "@main/adapters/email/EmailValidatorAdapter";
 
 export class SignUpValidationFactory {
 	static validate(): ValidationComposite {
