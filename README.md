@@ -1,4 +1,4 @@
- This are an Rest API who implements solutions and methodologies, including: Design Patterns, TDD (Unity and Integration Tests), Clean Architecture, and SOLID. 
+ This are an Rest API who implements solutions and methodologies, including: Design Patterns, TDD (Unity and Integration Tests), Clean Architecture, and SOLID. It provides a solid foundation for building scalable and maintainable applications.
  
  Its currently available features are: 
 - ✅ SignUp 
