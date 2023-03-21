@@ -19,7 +19,7 @@ export class CreateAccountData implements ICreateAccount {
 	public async handle(accountData: ICreateAccountModel): Promise<IAccountModel> {
 		const hashedPass = await this.hasher.hash(accountData.password);
 
-		const account = await this.createAccountRepository.handle(
+		const account = await this.createAccountRepository.create(
 			Object.assign({}, accountData, {
 				password: hashedPass
 			})

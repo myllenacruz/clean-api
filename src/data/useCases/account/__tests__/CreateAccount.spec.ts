@@ -24,7 +24,7 @@ function makeHasher(): IHasher {
 
 function makeCreateAccountRepository(): ICreateAccountRepository {
 	class CreateAccountRepository implements ICreateAccountRepository {
-		async handle(accountData: ICreateAccountModel): Promise<IAccountModel> {
+		async create(accountData: ICreateAccountModel): Promise<IAccountModel> {
 			return new Promise(resolve => resolve(accountModel));
 		}
 	}
@@ -76,7 +76,7 @@ describe("CreateAccountData", () => {
 	test("Should call CreateAccountRepository with correct values", async () => {
 		const { systemUnderTest, createAccountRepository } = makeSystemUnderTest();
 
-		const handleSype = jest.spyOn(createAccountRepository, "handle");
+		const handleSype = jest.spyOn(createAccountRepository, "create");
 
 		await systemUnderTest.handle(accountData);
 
