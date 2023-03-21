@@ -2,24 +2,24 @@ import { IAuthentication } from "@domain/useCases/authentication/IAuthentication
 import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
-import { ITokenGenerator } from "@data/protocols/cryptography/token/ITokenGenerator";
+import { IEncrypter } from "@data/protocols/cryptography/token/IEncrypter";
 import { IUpdateAccessTokenRepository } from "@data/protocols/cryptography/token/IUpdateAccessTokenRepository";
 
 export class AuthenticationData implements IAuthentication {
 	private readonly loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 	private readonly hashComparer: IHashComparer;
-	private readonly tokenGenerator: ITokenGenerator;
+	private readonly encrypter: IEncrypter;
 	private readonly updateAccessTokenRepository: IUpdateAccessTokenRepository;
 
 	constructor(
 		loadAccountByUsernameRepository: ILoadAccountByUsernameRepository,
 		hashComparer: IHashComparer,
-		tokenGenerator: ITokenGenerator,
+		encrypter: IEncrypter,
 		updateAccessTokenRepository: IUpdateAccessTokenRepository
 	) {
 		this.loadAccountByUsernameRepository = loadAccountByUsernameRepository;
 		this.hashComparer = hashComparer;
-		this.tokenGenerator = tokenGenerator;
+		this.encrypter = encrypter;
 		this.updateAccessTokenRepository = updateAccessTokenRepository;
 	}
 
@@ -30,7 +30,7 @@ export class AuthenticationData implements IAuthentication {
 			const isValid = await this.hashComparer.compare(authentication.password, account.password);
 
 			if (isValid) {
-				const accessToken = await this.tokenGenerator.generate(account.id);
+				const accessToken = await this.encrypter.encrypt(account.id);
 
 				await this.updateAccessTokenRepository.update(account.id, accessToken);
 

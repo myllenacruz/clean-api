@@ -3,14 +3,14 @@ import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
-import { ITokenGenerator } from "@data/protocols/cryptography/token/ITokenGenerator";
+import { IEncrypter } from "@data/protocols/cryptography/token/IEncrypter";
 import { IUpdateAccessTokenRepository } from "@data/protocols/cryptography/token/IUpdateAccessTokenRepository";
 
 interface ISystemUnderTest {
 	systemUnderTest: AuthenticationData;
 	loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 	hashComparer: IHashComparer;
-	tokenGenerator: ITokenGenerator;
+	encrypter: IEncrypter;
 	updateAccessTokenRepository: IUpdateAccessTokenRepository;
 }
 
@@ -50,14 +50,14 @@ function makeHashComparer(): IHashComparer {
 	return new HashComparer();
 }
 
-function makeTokenGenerator(): ITokenGenerator {
-	class TokenGenerator implements ITokenGenerator {
-		async generate(id: string): Promise<string> {
+function makeEncrypterGenerator(): IEncrypter {
+	class Encrypter implements IEncrypter {
+		async encrypt(id: string): Promise<string> {
 			return new Promise(resolve => resolve("validToken"));
 		}
 	}
 
-	return new TokenGenerator();
+	return new Encrypter();
 }
 
 function makeUpdateAccessTokenRepository(): IUpdateAccessTokenRepository {
@@ -73,12 +73,12 @@ function makeUpdateAccessTokenRepository(): IUpdateAccessTokenRepository {
 function makeSystemUnderTest(): ISystemUnderTest {
 	const loadAccountByUsernameRepository = makeLoadAccountByUsernameRepository();
 	const hashComparer = makeHashComparer();
-	const tokenGenerator = makeTokenGenerator();
+	const encrypter = makeEncrypterGenerator();
 	const updateAccessTokenRepository = makeUpdateAccessTokenRepository();
 	const systemUnderTest = new AuthenticationData(
 		loadAccountByUsernameRepository,
 		hashComparer,
-		tokenGenerator,
+		encrypter,
 		updateAccessTokenRepository
 	);
 
@@ -86,7 +86,7 @@ function makeSystemUnderTest(): ISystemUnderTest {
 		systemUnderTest,
 		loadAccountByUsernameRepository,
 		hashComparer,
-		tokenGenerator,
+		encrypter,
 		updateAccessTokenRepository
 	};
 }
@@ -148,19 +148,19 @@ describe("AuthenticationDatabase", () => {
 		expect(accesToken).toBe("");
 	});
 
-	test("Should call TokenGenerator with correct id", async () => {
-		const { systemUnderTest, tokenGenerator } = makeSystemUnderTest();
-		const generateSpy = jest.spyOn(tokenGenerator, "generate");
+	test("Should call Encrypter with correct id", async () => {
+		const { systemUnderTest, encrypter } = makeSystemUnderTest();
+		const generateSpy = jest.spyOn(encrypter, "encrypt");
 
 		await systemUnderTest.auth(makeFakeAuthentication());
 
 		expect(generateSpy).toHaveBeenCalledWith("validId");
 	});
 
-	test("Should throw if TokenGenerator throws", async () => {
-		const { systemUnderTest, tokenGenerator } = makeSystemUnderTest();
+	test("Should throw if Encrypter throws", async () => {
+		const { systemUnderTest, encrypter } = makeSystemUnderTest();
 
-		jest.spyOn(tokenGenerator, "generate").mockImplementationOnce(() => {
+		jest.spyOn(encrypter, "encrypt").mockImplementationOnce(() => {
 			throw new Error();
 		});
 
