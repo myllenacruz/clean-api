@@ -75,7 +75,9 @@ describe("AuthenticationDatabase", () => {
 			throw new Error();
 		});
 
-		await expect(systemUnderTest.auth(makeFakeAuthentication())).rejects.toThrow();
+		await expect(
+			systemUnderTest.auth(makeFakeAuthentication())
+		).rejects.toThrow();
 	});
 
 	test("Should call HashComparer with correct values", async () => {
@@ -85,5 +87,17 @@ describe("AuthenticationDatabase", () => {
 		await systemUnderTest.auth(makeFakeAuthentication());
 
 		expect(compareSpy).toHaveBeenCalledWith("1234", "hashedPassword");
+	});
+
+	test("Should throw if HashComparer throws", async () => {
+		const { systemUnderTest, hashComparer } = makeSystemUnderTest();
+
+		jest.spyOn(hashComparer, "compare").mockImplementationOnce(() => {
+			throw new Error();
+		});
+
+		await expect(
+			systemUnderTest.auth(makeFakeAuthentication())
+		).rejects.toThrow();
 	});
 });
