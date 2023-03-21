@@ -20,7 +20,7 @@ describe("LoginRoute", () => {
 		await accountCollection.deleteMany({});
 	});
 
-	test("Should return 200 on login", async () => {
+	test("Should return 200", async () => {
 		const password = await hash("1234", 12);
 
 		await accountCollection.insertOne({
@@ -36,5 +36,15 @@ describe("LoginRoute", () => {
 				password: "1234"
 			})
 			.expect(200);
+	});
+
+	test("Should return 401 if invalid credentials are provided", async () => {
+		await request(app)
+			.post("/api/login")
+			.send({
+				username: "janeDoe",
+				password: "1234"
+			})
+			.expect(401);
 	});
 });
