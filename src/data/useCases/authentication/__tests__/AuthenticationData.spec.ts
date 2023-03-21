@@ -153,4 +153,11 @@ describe("AuthenticationDatabase", () => {
 			systemUnderTest.auth(makeFakeAuthentication())
 		).rejects.toThrow();
 	});
+
+	test("Should return an token on success", async () => {
+		const { systemUnderTest } = makeSystemUnderTest();
+		const accessToken = await systemUnderTest.auth(makeFakeAuthentication());
+
+		expect(accessToken).toBe("validToken");
+	});
 });

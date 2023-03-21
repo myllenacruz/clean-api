@@ -23,8 +23,12 @@ export class AuthenticationData implements IAuthentication {
 		const account = await this.loadAccountByUsernameRepository.load(authentication.username);
 
 		if (account) {
-			await this.hashComparer.compare(authentication.password, account.password);
-			await this.tokenGenerator.generate(account.id);
+			const isValid = await this.hashComparer.compare(authentication.password, account.password);
+
+			if (isValid) {
+				const accessToken = await this.tokenGenerator.generate(account.id);
+				return accessToken;
+			}
 		}
 
 		return "";
