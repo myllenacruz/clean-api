@@ -3,20 +3,24 @@ import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticat
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
 import { ITokenGenerator } from "@data/protocols/cryptography/token/ITokenGenerator";
+import { IUpdateAccessTokenRepository } from "@data/protocols/cryptography/token/IUpdateAccessTokenRepository";
 
 export class AuthenticationData implements IAuthentication {
 	private readonly loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 	private readonly hashComparer: IHashComparer;
 	private readonly tokenGenerator: ITokenGenerator;
+	private readonly updateAccessTokenRepository: IUpdateAccessTokenRepository;
 
 	constructor(
 		loadAccountByUsernameRepository: ILoadAccountByUsernameRepository,
 		hashComparer: IHashComparer,
-		tokenGenerator: ITokenGenerator
+		tokenGenerator: ITokenGenerator,
+		updateAccessTokenRepository: IUpdateAccessTokenRepository
 	) {
 		this.loadAccountByUsernameRepository = loadAccountByUsernameRepository;
 		this.hashComparer = hashComparer;
 		this.tokenGenerator = tokenGenerator;
+		this.updateAccessTokenRepository = updateAccessTokenRepository;
 	}
 
 	public async auth(authentication: IAuthenticationModel): Promise<string> {
@@ -27,6 +31,9 @@ export class AuthenticationData implements IAuthentication {
 
 			if (isValid) {
 				const accessToken = await this.tokenGenerator.generate(account.id);
+
+				await this.updateAccessTokenRepository.update(account.id, accessToken);
+
 				return accessToken;
 			}
 		}

@@ -4,12 +4,14 @@ import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadA
 import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
 import { ITokenGenerator } from "@data/protocols/cryptography/token/ITokenGenerator";
+import { IUpdateAccessTokenRepository } from "@data/protocols/cryptography/token/IUpdateAccessTokenRepository";
 
 interface ISystemUnderTest {
 	systemUnderTest: AuthenticationData;
 	loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 	hashComparer: IHashComparer;
 	tokenGenerator: ITokenGenerator;
+	updateAccessTokenRepository: IUpdateAccessTokenRepository;
 }
 
 function makeFakeAccount(): IAccountModel {
@@ -58,21 +60,34 @@ function makeTokenGenerator(): ITokenGenerator {
 	return new TokenGenerator();
 }
 
+function makeUpdateAccessTokenRepository(): IUpdateAccessTokenRepository {
+	class UpdateAccessTokenRepository implements IUpdateAccessTokenRepository {
+		async update(id: string, token: string): Promise<void> {
+			return new Promise(resolve => resolve());
+		}
+	}
+
+	return new UpdateAccessTokenRepository();
+}
+
 function makeSystemUnderTest(): ISystemUnderTest {
 	const loadAccountByUsernameRepository = makeLoadAccountByUsernameRepository();
 	const hashComparer = makeHashComparer();
 	const tokenGenerator = makeTokenGenerator();
+	const updateAccessTokenRepository = makeUpdateAccessTokenRepository();
 	const systemUnderTest = new AuthenticationData(
 		loadAccountByUsernameRepository,
 		hashComparer,
-		tokenGenerator
+		tokenGenerator,
+		updateAccessTokenRepository
 	);
 
 	return {
 		systemUnderTest,
 		loadAccountByUsernameRepository,
 		hashComparer,
-		tokenGenerator
+		tokenGenerator,
+		updateAccessTokenRepository
 	};
 }
 
@@ -159,5 +174,14 @@ describe("AuthenticationDatabase", () => {
 		const accessToken = await systemUnderTest.auth(makeFakeAuthentication());
 
 		expect(accessToken).toBe("validToken");
+	});
+
+	test("Should call UpdateAccessTokenRepository with correct values", async () => {
+		const { systemUnderTest, updateAccessTokenRepository } = makeSystemUnderTest();
+		const updateSpy = jest.spyOn(updateAccessTokenRepository, "update");
+
+		await systemUnderTest.auth(makeFakeAuthentication());
+
+		expect(updateSpy).toHaveBeenCalledWith("validId", "validToken");
 	});
 });
