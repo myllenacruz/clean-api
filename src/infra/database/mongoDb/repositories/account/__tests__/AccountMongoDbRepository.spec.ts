@@ -1,5 +1,8 @@
 import { MongoHelper } from "@infra/database/mongoDb/helpers/MongoHelper";
 import { AccountMongoDbRepository } from "@infra/database/mongoDb/repositories/account/AccountMongoDbRepository";
+import { Collection } from "mongodb";
+
+let accountCollection: Collection;
 
 describe("AccountMongoDbRepository", () => {
 	beforeAll(async () => {
@@ -11,13 +14,13 @@ describe("AccountMongoDbRepository", () => {
 	});
 
 	beforeEach(async () => {
-		const accountCollection = MongoHelper.getCollection("accounts");
+		accountCollection = MongoHelper.getCollection("accounts");
 		await accountCollection.deleteMany({});
 	});
 
-	test("Should return an account on success", async () => {
+	test("Should return an account on add success", async () => {
 		const systemUnderTest = new AccountMongoDbRepository();
-		const account = await systemUnderTest.handle({
+		const account = await systemUnderTest.create({
 			username: "janeDoe",
 			email: "valid@email.com",
 			password: "1234"
@@ -28,5 +31,30 @@ describe("AccountMongoDbRepository", () => {
 		expect(account.username).toBe("janeDoe");
 		expect(account.email).toBe("valid@email.com");
 		expect(account.password).toBe("1234");
+	});
+
+	test("Should return an account on loadByUsername success", async () => {
+		const systemUnderTest = new AccountMongoDbRepository();
+
+		await accountCollection.insertOne({
+			username: "janeDoe",
+			email: "valid@email.com",
+			password: "1234"
+		});
+
+		const account = await systemUnderTest.loadByUsername("janeDoe");
+
+		expect(account).toBeTruthy();
+		expect(account!.id).toBeTruthy();
+		expect(account!.username).toBe("janeDoe");
+		expect(account!.email).toBe("valid@email.com");
+		expect(account!.password).toBe("1234");
+	});
+
+	test("Should undefined if loadByUsername fails", async () => {
+		const systemUnderTest = new AccountMongoDbRepository();
+		const account = await systemUnderTest.loadByUsername("janeDoe");
+
+		expect(account).toBeFalsy();
 	});
 });
