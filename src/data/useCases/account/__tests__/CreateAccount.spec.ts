@@ -64,15 +64,13 @@ describe("CreateAccountData", () => {
 	test("Should throw if Hasher throws", async () => {
 		const { systemUnderTest, hasher } = makeSystemUnderTest();
 
-		jest.spyOn(hasher, "hash").mockReturnValueOnce(
-			new Promise((resolve, reject) => {
-			    reject(new Error());
-			})
-		);
+		jest.spyOn(hasher, "hash").mockImplementationOnce(() => {
+			throw new Error();
+		});
 
-		const promise = systemUnderTest.handle(accountData);
-
-		await expect(promise).rejects.toThrow();
+		await expect(
+			systemUnderTest.handle(accountData)
+		).rejects.toThrow();
 	});
 
 	test("Should call CreateAccountRepository with correct values", async () => {

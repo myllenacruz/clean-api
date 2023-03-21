@@ -33,9 +33,9 @@ describe("BCryptAdapter", () => {
 			throw new Error();
 		});
 
-		const promise = systemUnderTest.hash("value");
-
-		await expect(promise).rejects.toThrow();
+		await expect(
+			systemUnderTest.hash("value")
+		).rejects.toThrow();
 	});
 
 	test("Should return a valid hash on hash success", async () => {
