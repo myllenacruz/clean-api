@@ -23,4 +23,16 @@ describe("JwtAdapter", () => {
 
 		expect(accessToken).toBe("validToken");
 	});
+
+	test("Should throw if sign throws", async () => {
+		const systemUnderTest = new JwtAdapter("secret");
+
+		jest.spyOn(jwt, "sign").mockImplementationOnce(() => {
+			throw new Error();
+		});
+
+		expect(
+			systemUnderTest.encrypt("validId")
+		).rejects.toThrow();
+	});
 });
