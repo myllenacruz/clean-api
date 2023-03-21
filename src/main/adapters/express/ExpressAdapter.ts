@@ -11,10 +11,9 @@ export class ExpressAdapter {
 			if (httpResponse.statusCode == 200)
 				return response.status(httpResponse.statusCode).json(httpResponse.body);
 
-			else
-				return response.status(httpResponse.statusCode).json({ error:
-					httpResponse.body.message
-				});
+			return response.status(httpResponse.statusCode).json({
+				error: httpResponse.body.message
+			});
 		};
 	}
 }
