@@ -7,7 +7,7 @@ export default (app: Express): void => {
 	app.use("/api", router);
 
 	fastGlob
-		.sync("**/src/main/routes/signUp/**.routes.ts")
+		.sync("**/src/main/routes/*/**.routes.ts")
 		.map(async file => {
 			(await import(`../../../${file}`)).default(router);
 		});
