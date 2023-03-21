@@ -53,4 +53,11 @@ describe("BCryptAdapter", () => {
 
 		expect(hash).toHaveBeenCalledWith("value", "hash");
 	});
+
+	test("Should return true when compare succeeds", async () => {
+		const systemUnderTest = makeSystemUnderTest();
+		const isValid = await systemUnderTest.compare("value", "hash");
+
+		expect(isValid).toBe(true);
+	});
 });
