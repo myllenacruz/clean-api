@@ -100,4 +100,18 @@ describe("AuthenticationDatabase", () => {
 			systemUnderTest.auth(makeFakeAuthentication())
 		).rejects.toThrow();
 	});
+
+	test("Should return an empty string if HashComparer returns false", async () => {
+		const { systemUnderTest, hashComparer } = makeSystemUnderTest();
+
+		jest.spyOn(hashComparer, "compare").mockReturnValueOnce(
+			new Promise(resolve => {
+				resolve(false);
+			})
+		);
+
+		const accesToken = await systemUnderTest.auth(makeFakeAuthentication());
+
+		expect(accesToken).toBe("");
+	});
 });
