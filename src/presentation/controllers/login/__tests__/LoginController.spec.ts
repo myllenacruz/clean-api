@@ -5,6 +5,7 @@ import { IAuthentication } from "@domain/useCases/authentication/IAuthentication
 import { invalidRequest, validRequest } from "@presentation/controllers/login/__tests__/mocks/httpRequest";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { IInput } from "@presentation/protocols/validation/IInput";
+import { IAuthenticationModel } from "@domain/useCases/authentication/IAuthenticationModel";
 
 interface ISystemUnderTest {
 	systemUnderTest: LoginController;
@@ -27,8 +28,7 @@ function makeSystemUnderTest(): ISystemUnderTest {
 function makeAuthentication(): IAuthentication {
 	class Authentication implements IAuthentication {
 		async auth(
-			username: string,
-			password: string
+			authentication: IAuthenticationModel
 		): Promise<string> {
 			return "anyToken";
 		}
@@ -55,7 +55,10 @@ describe("LoginController", () => {
 
 		await systemUnderTest.handle(validRequest);
 
-		expect(authSpy).toHaveBeenCalledWith("janeDoe", "1234");
+		expect(authSpy).toHaveBeenCalledWith({
+			username: "janeDoe",
+			password: "1234"
+		});
 	});
 
 	test("Should return 401 an invalid credentials are provided", async () => {

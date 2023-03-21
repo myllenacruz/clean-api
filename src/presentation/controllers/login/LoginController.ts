@@ -29,9 +29,10 @@ export class LoginController implements IController {
 			if (validationError)
 				return HttpResponse.badRequest(validationError);
 
-			const accessToken = await this.authentication.auth(username, password);
+			const accessToken = await this.authentication.auth({ username, password });
 
-			if (!accessToken) return HttpResponse.unauthorized();
+			if (!accessToken)
+				return HttpResponse.unauthorized();
 
 			return HttpResponse.success({ accessToken });
 		} catch (error) {

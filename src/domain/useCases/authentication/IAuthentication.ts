@@ -1,3 +1,5 @@
+import { IAuthenticationModel } from "@domain/useCases/authentication/IAuthenticationModel";
+
 export interface IAuthentication {
-	auth(username: string, password: string): Promise<string>;
+	auth(authentication: IAuthenticationModel): Promise<string>;
 }
