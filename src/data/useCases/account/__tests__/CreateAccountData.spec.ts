@@ -5,7 +5,6 @@ import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
 import { accountModel } from "@data/useCases/account/__tests__/mocks/account";
 import { accountData } from "@data/useCases/account/__tests__/mocks/accountData";
-import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 
 interface ISystemUnderTest {
