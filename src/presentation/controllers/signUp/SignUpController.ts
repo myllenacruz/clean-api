@@ -4,17 +4,21 @@ import { IHttpRequest } from "@presentation/protocols/http/IHttpRequest";
 import { IHttpResponse } from "@presentation/protocols/http/IHttpResponse";
 import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
+import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
 
 export class SignUpController implements IController {
 	private readonly createAccount: ICreateAccount;
 	private readonly validation: IValidation;
+	private readonly authentication: IAuthentication;
 
 	constructor(
 		createAccount: ICreateAccount,
-		validation: IValidation
+		validation: IValidation,
+		authentication: IAuthentication
 	) {
 		this.createAccount = createAccount;
 		this.validation = validation;
+		this.authentication = authentication;
 	}
 
 	public async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
@@ -33,6 +37,11 @@ export class SignUpController implements IController {
 			const account = await this.createAccount.handle({
 				username,
 				email,
+				password
+			});
+
+			await this.authentication.auth({
+				username,
 				password
 			});
 

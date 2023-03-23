@@ -9,11 +9,14 @@ import { accountModel } from "@presentation/controllers/signUp/__tests__/mocks/a
 import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { IInput } from "@presentation/protocols/validation/IInput";
+import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
+import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
 
 interface ISystemUnderTest {
 	createAccount: ICreateAccount;
 	systemUnderTest: SignUpController;
 	validation: IValidation
+	authentication: IAuthentication;
 }
 
 async function makeCreateAccount(): Promise<ICreateAccount> {
@@ -36,15 +39,33 @@ function makeValidation(): IValidation {
 	return new Validation();
 }
 
+function makeAuthentication(): IAuthentication {
+	class Authentication implements IAuthentication {
+		async auth(
+			authentication: IAuthenticationModel
+		): Promise<string> {
+			return "anyToken";
+		}
+	}
+
+	return new Authentication();
+}
+
 async function makeSystemUnderTest(): Promise<ISystemUnderTest> {
 	const createAccount = await makeCreateAccount();
 	const validation = makeValidation();
-	const systemUnderTest = new SignUpController(createAccount, validation);
+	const authentication = makeAuthentication();
+	const systemUnderTest = new SignUpController(
+		createAccount,
+		validation,
+		authentication
+	);
 
 	return {
 		systemUnderTest,
 		createAccount,
-		validation
+		validation,
+		authentication
 	};
 }
 
@@ -101,5 +122,14 @@ describe("SignUp Controller", () => {
 		const httpResponse = await systemUnderTest.handle(validRequest);
 
 		expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError("field")));
+	});
+
+	test("Should call Authentication with correct values", async () => {
+		const { systemUnderTest, authentication } = await makeSystemUnderTest();
+		const validateSpy = jest.spyOn(authentication, "auth");
+
+		await systemUnderTest.handle(validRequest);
+
+		expect(validateSpy).toHaveBeenCalledWith(validRequest.body);
 	});
 });
