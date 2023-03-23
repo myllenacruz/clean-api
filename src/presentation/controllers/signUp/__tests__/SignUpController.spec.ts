@@ -1,6 +1,6 @@
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
-import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
+import { ICreateAccountParams } from "@domain/models/account/ICreateAccountParams";
 import { SignUpController } from "@presentation/controllers/signUp/SignUpController";
 import { MissingParamError } from "@presentation/errors/MissingParamError";
 import { ServerError } from "@presentation/errors/ServerError";
@@ -10,7 +10,7 @@ import { HttpResponse } from "@presentation/helpers/http/HttpResponse";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { IInput } from "@presentation/protocols/validation/IInput";
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
-import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
+import { IAuthenticationParams } from "@domain/models/authentication/IAuthenticationParams";
 
 interface ISystemUnderTest {
 	createAccount: ICreateAccount;
@@ -21,7 +21,7 @@ interface ISystemUnderTest {
 
 async function makeCreateAccount(): Promise<ICreateAccount> {
 	class CreateAccount implements ICreateAccount {
-		async handle(account: ICreateAccountModel): Promise<IAccountModel> {
+		async handle(account: ICreateAccountParams): Promise<IAccountModel> {
 			return new Promise(resolve => resolve(accountModel));
 		}
 	}
@@ -42,7 +42,7 @@ function makeValidation(): IValidation {
 function makeAuthentication(): IAuthentication {
 	class Authentication implements IAuthentication {
 		async auth(
-			authentication: IAuthenticationModel
+			authentication: IAuthenticationParams
 		): Promise<string> {
 			return "anyToken";
 		}

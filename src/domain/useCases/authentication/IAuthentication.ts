@@ -1,5 +1,5 @@
-import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
+import { IAuthenticationParams } from "@domain/models/authentication/IAuthenticationParams";
 
 export interface IAuthentication {
-	auth(authentication: IAuthenticationModel): Promise<string>;
+	auth(authentication: IAuthenticationParams): Promise<string>;
 }

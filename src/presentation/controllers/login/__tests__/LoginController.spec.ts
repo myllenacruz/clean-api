@@ -5,7 +5,7 @@ import { IAuthentication } from "@domain/useCases/authentication/IAuthentication
 import { invalidRequest, validRequest } from "@presentation/controllers/login/__tests__/mocks/httpRequest";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { IInput } from "@presentation/protocols/validation/IInput";
-import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
+import { IAuthenticationParams } from "@domain/models/authentication/IAuthenticationParams";
 
 interface ISystemUnderTest {
 	systemUnderTest: LoginController;
@@ -28,7 +28,7 @@ function makeSystemUnderTest(): ISystemUnderTest {
 function makeAuthentication(): IAuthentication {
 	class Authentication implements IAuthentication {
 		async auth(
-			authentication: IAuthenticationModel
+			authentication: IAuthenticationParams
 		): Promise<string> {
 			return "anyToken";
 		}

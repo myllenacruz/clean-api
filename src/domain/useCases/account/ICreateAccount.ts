@@ -1,6 +1,6 @@
 import { IAccountModel } from "@domain/models/account/IAccountModel";
-import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
+import { ICreateAccountParams } from "@domain/models/account/ICreateAccountParams";
 
 export interface ICreateAccount {
-	handle(account: ICreateAccountModel): Promise<IAccountModel | undefined>;
+	handle(account: ICreateAccountParams): Promise<IAccountModel | undefined>;
 }

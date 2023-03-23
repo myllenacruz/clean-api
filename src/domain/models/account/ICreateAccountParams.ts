@@ -1,4 +1,4 @@
-export interface ICreateAccountModel {
+export interface ICreateAccountParams {
 	username: string;
 	email: string;
 	password: string;

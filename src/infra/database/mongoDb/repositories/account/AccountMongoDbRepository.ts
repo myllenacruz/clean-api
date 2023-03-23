@@ -1,6 +1,6 @@
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
-import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
+import { ICreateAccountParams } from "@domain/models/account/ICreateAccountParams";
 import { MongoHelper } from "@infra/database/mongoDb/helpers/MongoHelper";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 import { IUpdateAccessTokenRepository } from "@data/protocols/cryptography/token/IUpdateAccessTokenRepository";
@@ -11,7 +11,7 @@ export class AccountMongoDbRepository implements
 	ILoadAccountByUsernameRepository,
 	IUpdateAccessTokenRepository
 {
-	public async create(accountData: ICreateAccountModel): Promise<IAccountModel> {
+	public async create(accountData: ICreateAccountParams): Promise<IAccountModel> {
 		const accountCollection = MongoHelper.getCollection("accounts");
 
 		const newAccount = await accountCollection.insertOne(accountData);

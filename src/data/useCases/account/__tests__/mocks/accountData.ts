@@ -1,6 +1,6 @@
-import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
+import { ICreateAccountParams } from "@domain/models/account/ICreateAccountParams";
 
-export const accountData: ICreateAccountModel = {
+export const accountData: ICreateAccountParams = {
 	username: "janedoe",
 	email: "valid@email.com",
 	password: "1234"

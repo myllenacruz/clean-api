@@ -1,7 +1,7 @@
 import { AuthenticationData } from "../AuthenticationData";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
-import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
+import { IAuthenticationParams } from "@domain/models/authentication/IAuthenticationParams";
 import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
 import { IEncrypter } from "@data/protocols/cryptography/token/IEncrypter";
 import { IUpdateAccessTokenRepository } from "@data/protocols/cryptography/token/IUpdateAccessTokenRepository";
@@ -23,7 +23,7 @@ function makeFakeAccount(): IAccountModel {
 	};
 }
 
-function makeFakeAuthentication(): IAuthenticationModel {
+function makeFakeAuthentication(): IAuthenticationParams {
 	return {
 		username: "janeDoe",
 		password: "1234"

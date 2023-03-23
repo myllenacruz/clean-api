@@ -1,6 +1,6 @@
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
-import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
+import { ICreateAccountParams } from "@domain/models/account/ICreateAccountParams";
 import { IHasher } from "@data/protocols/cryptography/hash/IHasher";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
@@ -20,7 +20,7 @@ export class CreateAccountData implements ICreateAccount {
 		this.loadAccountByUsernameRepository = loadAccountByUsernameRepository;
 	}
 
-	public async handle(accountData: ICreateAccountModel): Promise<IAccountModel | undefined> {
+	public async handle(accountData: ICreateAccountParams): Promise<IAccountModel | undefined> {
 		const account = await this.loadAccountByUsernameRepository.loadByUsername(accountData.username);
 
 		if (!account) {

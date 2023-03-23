@@ -1,6 +1,6 @@
 import { IHasher } from "@data/protocols/cryptography/hash/IHasher";
 import { CreateAccountData } from "@data/useCases/account/CreateAccountData";
-import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
+import { ICreateAccountParams } from "@domain/models/account/ICreateAccountParams";
 import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
 import { accountModel } from "@data/useCases/account/__tests__/mocks/account";
@@ -26,7 +26,7 @@ function makeHasher(): IHasher {
 
 function makeCreateAccountRepository(): ICreateAccountRepository {
 	class CreateAccountRepository implements ICreateAccountRepository {
-		async create(accountData: ICreateAccountModel): Promise<IAccountModel> {
+		async create(accountData: ICreateAccountParams): Promise<IAccountModel> {
 			return new Promise(resolve => resolve(accountModel));
 		}
 	}

@@ -1,5 +1,5 @@
 import { IAuthentication } from "@domain/useCases/authentication/IAuthentication";
-import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
+import { IAuthenticationParams } from "@domain/models/authentication/IAuthenticationParams";
 import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 import { IHashComparer } from "@data/protocols/cryptography/hash/IHashComparer";
 import { IEncrypter } from "@data/protocols/cryptography/token/IEncrypter";
@@ -23,7 +23,7 @@ export class AuthenticationData implements IAuthentication {
 		this.updateAccessTokenRepository = updateAccessTokenRepository;
 	}
 
-	public async auth(authentication: IAuthenticationModel): Promise<string> {
+	public async auth(authentication: IAuthenticationParams): Promise<string> {
 		const account = await this.loadAccountByUsernameRepository.loadByUsername(authentication.username);
 
 		if (account) {

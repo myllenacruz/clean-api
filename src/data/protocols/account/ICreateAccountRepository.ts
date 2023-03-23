@@ -1,6 +1,6 @@
 import { IAccountModel } from "@domain/models/account/IAccountModel";
-import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
+import { ICreateAccountParams } from "@domain/models/account/ICreateAccountParams";
 
 export interface ICreateAccountRepository {
-	create(accountData: ICreateAccountModel): Promise<IAccountModel>;
+	create(accountData: ICreateAccountParams): Promise<IAccountModel>;
 }
