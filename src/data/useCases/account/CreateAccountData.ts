@@ -20,17 +20,18 @@ export class CreateAccountData implements ICreateAccount {
 		this.loadAccountByUsernameRepository = loadAccountByUsernameRepository;
 	}
 
-	public async handle(accountData: ICreateAccountModel): Promise<IAccountModel> {
-		await this.loadAccountByUsernameRepository.loadByUsername(accountData.username);
+	public async handle(accountData: ICreateAccountModel): Promise<IAccountModel | undefined> {
+		const account = await this.loadAccountByUsernameRepository.loadByUsername(accountData.username);
 
-		const hashedPass = await this.hasher.hash(accountData.password);
+		if (!account) {
+			const hashedPass = await this.hasher.hash(accountData.password);
+			const newAccount = await this.createAccountRepository.create(
+				Object.assign({}, accountData, {
+					password: hashedPass
+				})
+			);
 
-		const account = await this.createAccountRepository.create(
-			Object.assign({}, accountData, {
-				password: hashedPass
-			})
-		);
-
-		return account;
+			return newAccount;
+		}
 	}
 }

@@ -35,13 +35,6 @@ function makeCreateAccountRepository(): ICreateAccountRepository {
 	return new CreateAccountRepository();
 }
 
-function makeFakeAuthentication(): IAuthenticationModel {
-	return {
-		username: "janeDoe",
-		password: "1234"
-	};
-}
-
 function makeFakeAccount(): IAccountModel {
 	return {
 		id: "validId",
@@ -53,8 +46,8 @@ function makeFakeAccount(): IAccountModel {
 
 function makeLoadAccountByUsernameRepository(): ILoadAccountByUsernameRepository {
 	class LoadAccountByUsernameRepository implements ILoadAccountByUsernameRepository {
-		async loadByUsername(username: string): Promise<IAccountModel> {
-			return new Promise(resolve => resolve(makeFakeAccount()));
+		async loadByUsername(username: string): Promise<IAccountModel | undefined> {
+			return new Promise(resolve => resolve(undefined));
 		}
 	}
 
@@ -128,6 +121,17 @@ describe("CreateAccountData", () => {
 		const account = await systemUnderTest.handle(accountData);
 
 		expect(account).toEqual(accountModel);
+	});
+
+	test("Should return undefined if LoadAccountByUsernameRepository returns an account", async () => {
+		const { systemUnderTest, loadAccountByUsernameRepository } = makeSystemUnderTest();
+
+		jest.spyOn(loadAccountByUsernameRepository, "loadByUsername")
+			.mockReturnValueOnce(new Promise(resolve => resolve(makeFakeAccount())));
+
+		const account = await systemUnderTest.handle(accountData);
+
+		expect(account).toBe(undefined);
 	});
 
 	test("Should call LoadAccountByUsernameRepository with correct username", async () => {
