@@ -23,8 +23,45 @@ _______
   ##### Don't Repeat Yourself (DRY) - For reduce code duplication.
 _______
 > ### Frameworks, librarys and packages used:
-  ##### Yarn.
-  ##### Jest.
-  ##### MongoDB.
-  ##### Express.
+  ##### Yarn
+  ##### Jest
+  ##### MongoDB
+  ##### Express
 _______
+### Tests
+1. Run: 
+
+```
+yarn test
+```
+_______
+### Development
+1. Install project dependencies: 
+
+```
+yarn install
+```
+
+2. Start the server:
+```
+yarn dev
+```
+_______
+### Documentation
+1 - Create a user calling <strong>/api/signup</strong>: 
+```
+{
+    "username": "user",
+    "email": "user@email.com",
+    "password": "userPassword",
+    "passwordConfirmation": "userPassword"
+}
+```
+
+2 - Do login in <strong>/api/login</strong>:
+```
+{
+    "username": "user",
+    "password": "userPassword"
+}
+```
