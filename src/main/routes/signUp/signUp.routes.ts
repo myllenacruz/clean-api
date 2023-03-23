@@ -1,9 +1,9 @@
 import { ExpressAdapter } from "@main/adapters/express/ExpressAdapter";
 import { Router } from "express";
-import { SignUpFactory } from "@main/factories/signUp/SignUpFactory";
+import { SignUpControllerFactory } from "@main/factories/controllers/signUp/SignUpControllerFactory";
 
 export default (router: Router): void => {
 	router.post("/signup",
-		ExpressAdapter.route(SignUpFactory.controller())
+		ExpressAdapter.route(SignUpControllerFactory.handle())
 	);
 };

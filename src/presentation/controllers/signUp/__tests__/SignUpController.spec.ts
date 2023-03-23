@@ -130,6 +130,9 @@ describe("SignUp Controller", () => {
 
 		await systemUnderTest.handle(validRequest);
 
-		expect(validateSpy).toHaveBeenCalledWith(validRequest.body);
+		expect(validateSpy).toHaveBeenCalledWith({
+			username: "janeDoe",
+			password: "1234"
+		});
 	});
 });

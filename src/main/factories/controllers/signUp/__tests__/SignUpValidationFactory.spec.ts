@@ -1,5 +1,5 @@
 import { ValidationComposite } from "@presentation/helpers/validation/ValidationComposite";
-import { SignUpValidationFactory } from "@main/factories/signUp/SignUpValidationFactory";
+import { SignUpValidationFactory } from "@main/factories/controllers/signUp/SignUpValidationFactory";
 import { RequiredFieldValidation } from "@presentation/helpers/validation/fields/RequiredFieldValidation";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
 import { CompareFieldsValidation } from "@presentation/helpers/validation/fields/CompareFieldsValidation";

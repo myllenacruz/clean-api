@@ -1,5 +1,5 @@
 import { ValidationComposite } from "@presentation/helpers/validation/ValidationComposite";
-import { LoginValidationFactory } from "@main/factories/login/LoginValidationFactory";
+import { LoginValidationFactory } from "@main/factories/controllers/login/LoginValidationFactory";
 import { RequiredFieldValidation } from "@presentation/helpers/validation/fields/RequiredFieldValidation";
 import { IValidation } from "@presentation/protocols/validation/IValidation";
 
