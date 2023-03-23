@@ -3,20 +3,26 @@ import { ICreateAccount } from "@domain/useCases/account/ICreateAccount";
 import { ICreateAccountModel } from "@domain/models/account/ICreateAccountModel";
 import { IHasher } from "@data/protocols/cryptography/hash/IHasher";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
+import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 
 export class CreateAccountData implements ICreateAccount {
 	private readonly hasher: IHasher;
 	private readonly createAccountRepository: ICreateAccountRepository;
+	private readonly loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 
 	constructor(
 		hasher: IHasher,
-		createAccountRepository: ICreateAccountRepository
+		createAccountRepository: ICreateAccountRepository,
+		loadAccountByUsernameRepository: ILoadAccountByUsernameRepository
 	) {
 		this.hasher = hasher;
 		this.createAccountRepository = createAccountRepository;
+		this.loadAccountByUsernameRepository = loadAccountByUsernameRepository;
 	}
 
 	public async handle(accountData: ICreateAccountModel): Promise<IAccountModel> {
+		await this.loadAccountByUsernameRepository.loadByUsername(accountData.username);
+
 		const hashedPass = await this.hasher.hash(accountData.password);
 
 		const account = await this.createAccountRepository.create(

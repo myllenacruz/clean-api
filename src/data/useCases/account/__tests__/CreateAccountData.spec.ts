@@ -5,11 +5,14 @@ import { IAccountModel } from "@domain/models/account/IAccountModel";
 import { ICreateAccountRepository } from "@data/protocols/account/ICreateAccountRepository";
 import { accountModel } from "@data/useCases/account/__tests__/mocks/account";
 import { accountData } from "@data/useCases/account/__tests__/mocks/accountData";
+import { IAuthenticationModel } from "@domain/models/authentication/IAuthenticationModel";
+import { ILoadAccountByUsernameRepository } from "@data/protocols/account/ILoadAccountByUsernameRepository";
 
 interface ISystemUnderTest {
 	hasher: IHasher;
 	systemUnderTest: CreateAccountData;
 	createAccountRepository: ICreateAccountRepository;
+	loadAccountByUsernameRepository: ILoadAccountByUsernameRepository;
 }
 
 function makeHasher(): IHasher {
@@ -32,15 +35,47 @@ function makeCreateAccountRepository(): ICreateAccountRepository {
 	return new CreateAccountRepository();
 }
 
+function makeFakeAuthentication(): IAuthenticationModel {
+	return {
+		username: "janeDoe",
+		password: "1234"
+	};
+}
+
+function makeFakeAccount(): IAccountModel {
+	return {
+		id: "validId",
+		username: "janeDoe",
+		email: "janedoe@email.com",
+		password: "hashedPassword"
+	};
+}
+
+function makeLoadAccountByUsernameRepository(): ILoadAccountByUsernameRepository {
+	class LoadAccountByUsernameRepository implements ILoadAccountByUsernameRepository {
+		async loadByUsername(username: string): Promise<IAccountModel> {
+			return new Promise(resolve => resolve(makeFakeAccount()));
+		}
+	}
+
+	return new LoadAccountByUsernameRepository();
+}
+
 function makeSystemUnderTest(): ISystemUnderTest {
 	const hasher = makeHasher();
 	const createAccountRepository = makeCreateAccountRepository();
-	const systemUnderTest = new CreateAccountData(hasher, createAccountRepository);
+	const loadAccountByUsernameRepository = makeLoadAccountByUsernameRepository();
+	const systemUnderTest = new CreateAccountData(
+		hasher,
+		createAccountRepository,
+		loadAccountByUsernameRepository
+	);
 
 	return {
 		hasher,
 		systemUnderTest,
-		createAccountRepository
+		createAccountRepository,
+		loadAccountByUsernameRepository
 	};
 }
 
@@ -93,5 +128,14 @@ describe("CreateAccountData", () => {
 		const account = await systemUnderTest.handle(accountData);
 
 		expect(account).toEqual(accountModel);
+	});
+
+	test("Should call LoadAccountByUsernameRepository with correct username", async () => {
+		const { systemUnderTest, loadAccountByUsernameRepository } = makeSystemUnderTest();
+		const loadSpy = jest.spyOn(loadAccountByUsernameRepository, "loadByUsername");
+
+		await systemUnderTest.handle(makeFakeAccount());
+
+		expect(loadSpy).toHaveBeenCalledWith("janeDoe");
 	});
 });
